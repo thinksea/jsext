@@ -2,6 +2,7 @@
 对 JavaScript 原生功能进行最小扩展。
 version：0.2
 last change：2015-1-30
+projects url:https://github.com/thinksea/jsext
 */
 
 /* 
