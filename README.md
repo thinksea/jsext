@@ -84,49 +84,69 @@ var s="abc";
 alert(s.endsWith("c"));//返回值为 true。
 ```
 
-# getUriParameter
+# String.prototype.getFileName
+获取文件全名。
+
+```javascript
+"c:\\a\\b\\d.e.txt".getFileName(); //d.e.txt
+"http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getFileName(); //d.e.htm
+```
+
+# String.prototype.getExtensionName
+获取文件扩展名。
+
+```javascript
+"c:\\a\\b\\d.e.txt".getExtensionName(); //.txt
+"http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getExtensionName(); //.htm
+```
+
+# String.prototype.getUriParameter
 从指定的 URI 中获取指定的参数的值。
 
-# setUriParameter
+# String.prototype.setUriParameter
 为指定的 URI 设置参数。
 
-# removeUriParameter
+# String.prototype.removeUriParameter
 从指定的 URI 删除参数。
 
-# clearUriParameter
+# String.prototype.clearUriParameter
 从指定的 URI 删除所有参数（从问号“?”开始到字符串结束的子串），只保留问号“?”之前的部分。
 
-# getUriProtocolAndDomain
+# String.prototype.getUriProtocolAndDomain
 获取指定的 URI 的协议和域名部分。
 
 ```javascript
-alert(getUriProtocolAndDomain("http://www.thinksea.com/a.htm"));//返回值为 http://www.thinksea.com/。
+alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
 ```
 
-# getUriPath
+# String.prototype.getUriPath
 获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以左下划线“/”为后缀。
 
 ```javascript
-alert(getUriPath("http://www.thinksea.com/a.aspx?id=1&name=2"));//输出 http://www.thinksea.com/
-alert(getUriPath("http://www.thinksea.com/?id=1&name=2"));//输出 http://www.thinksea.com/
-alert(getUriPath("http://www.thinksea.com?id=1&name=2"));//输出 http://www.thinksea.com/
-alert(getUriPath("http://www.thinksea.com/"));//输出 http://www.thinksea.com/
-alert(getUriPath("http://www.thinksea.com"));//输出 http://www.thinksea.com/
-alert(getUriPath("http://www.thinksea.com/a.aspx/?id=1&name=2"));//输出 http://www.thinksea.com/a.aspx/
+alert("http://www.thinksea.com/a.aspx?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+alert("http://www.thinksea.com/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+alert("http://www.thinksea.com?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+alert("http://www.thinksea.com/".getUriPath());//输出 http://www.thinksea.com/
+alert("http://www.thinksea.com".getUriPath());//输出 http://www.thinksea.com/
+alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/a.aspx/
 ```
 
-# combineUri
+# String.prototype.combineUri
 返回两个路径的组合。
 
-# getFullUri
+# String.prototype.getFullUri
 获取指定 Uri 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
 
-# xmlEncode
+```javascript
+alert("http://www.thinksea.com/../../a/b/../c.htm".getFullUri());//返回值为 http://www.thinksea.com/a/c.htm
+```
+
+# String.prototype.xmlEncode
 转义一个字符串，使其符合 XML 实体规则。
 
-# htmlEncode
+# String.prototype.htmlEncode
 将字符串转换为 HTML 编码的字符串。
 
-# htmlDecode
+# String.prototype.htmlDecode
 将已经进行过 HTML 编码的字符串转换为已解码的字符串。
 
