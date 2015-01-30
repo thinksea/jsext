@@ -1,4 +1,10 @@
-﻿if (typeof (Number.prototype.format) != "function") {
+﻿/*
+对 JavaScript 原生功能进行最小扩展。
+version：0.1
+last change：2015-1-30
+*/
+
+if (typeof (Number.prototype.format) != "function") {
     /* 
     功能：格式化数字显示方式。
     参数：
@@ -469,22 +475,22 @@ function clearUriParameter(uri) {
 /*
 功能：获取指定的 URI 的协议和域名部分。
 参数：
-    url：一个 url 字符串。
+    uri：一个 uri 字符串。
 返回值：找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
 
 调用示例：
-    alert(getUrlProtocolAndDomain("http://www.thinksea.com/a.htm"));//返回值为 http://www.thinksea.com/。
+    alert(getUriProtocolAndDomain("http://www.thinksea.com/a.htm"));//返回值为 http://www.thinksea.com/。
 */
-function getUrlProtocolAndDomain(url) {
+function getUriProtocolAndDomain(uri) {
     /// <summary>
     /// 获取指定的 URI 的协议和域名部分。
     /// </summary>
-    /// <param name="url" type="String">一个 url 字符串。</param>
+    /// <param name="uri" type="String">一个 uri 字符串。</param>
     /// <returns type="String">
     /// 找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
     /// </returns>
     var reg = /^[^\/\\]+:\/\/([^\/]+)/gi;
-    var m = url.match(reg);
+    var m = uri.match(reg);
     if (m) {
         return m[0];
     }
@@ -532,69 +538,69 @@ function getUriPath(uri) {
 /*
 功能：返回两个路径的组合。
 参数：
-    url1：第1个 url 字符串。
-    url2：第2个 url 字符串。
-返回值：如果 url1 和 url2 任何一个参数为空字符串，则返回另一个参数的值。
-    如果 url2 包含绝对路径则返回 url2。
+    uri1：第1个 uri 字符串。
+    uri2：第2个 uri 字符串。
+返回值：如果 uri1 和 uri2 任何一个参数为空字符串，则返回另一个参数的值。
+    如果 uri2 包含绝对路径则返回 uri2。
     否则返回两个路径的组合。
 
 调用示例：
-    alert(combineUrl("http://www.thinksea.com/a", "b/c.htm"));//返回值为 http://www.thinksea.com/a/b/c.htm
-    alert(combineUrl("http://www.thinksea.com/a", "/b/c.htm"));//返回值为 http://www.thinksea.com/b/c.htm
+    alert(combineUri("http://www.thinksea.com/a", "b/c.htm"));//返回值为 http://www.thinksea.com/a/b/c.htm
+    alert(combineUri("http://www.thinksea.com/a", "/b/c.htm"));//返回值为 http://www.thinksea.com/b/c.htm
 */
-function combineUrl(url1, url2) {
+function combineUri(uri1, uri2) {
     /// <summary>
     /// 返回两个路径的组合。
     /// </summary>
-    /// <param name="url1" type="String">第1个 url 字符串。</param>
-    /// <param name="url2" type="String">第2个 url 字符串。</param>
+    /// <param name="uri1" type="String">第1个 uri 字符串。</param>
+    /// <param name="uri2" type="String">第2个 uri 字符串。</param>
     /// <returns type="String">
-    /// 如果 url1 和 url2 任何一个参数为空字符串，则返回另一个参数的值。
-    /// 如果 url2 包含绝对路径则返回 url2。
+    /// 如果 uri1 和 uri2 任何一个参数为空字符串，则返回另一个参数的值。
+    /// 如果 uri2 包含绝对路径则返回 uri2。
     /// 否则返回两个路径的组合。
     /// </returns>
-    if (url1 == "") return url2;
-    if (url2 == "") return url1;
-    if (url2.indexOf("://") >= 0) {
-        return url2;
+    if (uri1 == "") return uri2;
+    if (uri2 == "") return uri1;
+    if (uri2.indexOf("://") >= 0) {
+        return uri2;
     }
     var regStartsWith = /^\//gi;
     var regEndsWith = /\/$/gi;
-    if (regStartsWith.test(url2)) {
-        return getUrlProtocolAndDomain(url1) + url2;
+    if (regStartsWith.test(uri2)) {
+        return getUriProtocolAndDomain(uri1) + uri2;
     }
-    if (regEndsWith.test(url1)) {
-        return url1 + url2;
+    if (regEndsWith.test(uri1)) {
+        return uri1 + uri2;
     }
     else {
-        return url1 + "/" + url2;
+        return uri1 + "/" + uri2;
     }
 }
 
 /*
-功能：获取指定 Url 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
+功能：获取指定 Uri 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
 参数：
-    url：一个 uri 字符串。
-返回值：处理后的 url。
+    uri：一个 uri 字符串。
+返回值：处理后的 uri。
 
 调用示例：
-    alert(getFullUrl("http://www.thinksea.com/../../a/b/../c.htm"));//返回值为 http://www.thinksea.com/a/c.htm
+    alert(getFullUri("http://www.thinksea.com/../../a/b/../c.htm"));//返回值为 http://www.thinksea.com/a/c.htm
 */
-function getFullUrl(url) {
+function getFullUri(uri) {
     /// <summary>
-    /// 获取指定 Url 的最短路径。
+    /// 获取指定 Uri 的最短路径。
     /// 通过转化其中的 ../ 等内容，使其尽可能缩短。
     /// </summary>
-    /// <param name="url" type="String">一个 uri 字符串。</param>
+    /// <param name="uri" type="String">一个 uri 字符串。</param>
     /// <returns type="String">
-    /// 处理后的 url。
+    /// 处理后的 uri。
     /// </returns>
-    var domain = getUrlProtocolAndDomain(url);
+    var domain = getUriProtocolAndDomain(uri);
     var reg = /^\//gi;
-    if (domain == "" && !reg.test(url)) {
-        return url;
+    if (domain == "" && !reg.test(uri)) {
+        return uri;
     }
-    var r = url.substring(domain.length, url.length);
+    var r = uri.substring(domain.length, uri.length);
     var reg1 = /(^\/(\.\.\/)+)/gi;
     var reg2 = /(\/[^\/.]+\/..\/)/gi;
     var last = r;
@@ -606,7 +612,7 @@ function getFullUrl(url) {
         }
         last = r;
     } while (true);
-    return combineUrl(domain, r);
+    return combineUri(domain, r);
 }
 
 
@@ -648,64 +654,3 @@ function htmlDecode(s) {
     if (s == null) return null;
     return s.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }
-
-
-/*
-功能：将纯文本转换成具有相似格式编排的 HTML 代码文本。
-参数：
-    Text：一个 string 对象。可能具有格式编排的文本。
-返回值：具有 HTML 格式的文本。
-*/
-function textToHtml(Text) {
-    if (Text == null) return null;
-    return Text.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;").replace(/\t/gi, "&nbsp;&nbsp;&nbsp;&nbsp;").replace(/\n\r|\r\n|\r|\n/gi, "<br />");
-}
-
-
-/*
-功能：将 HTML 代码片段转换成具有相似格式编排的纯文本形式。
-参数：
-Html：一段 HTML 片段。
-返回值：具有 HTML 格式的文本对象。
-*/
-function htmlToText(Html) {
-    if (Html == null) return null;
-
-    var reSpace = /(\s*)\n(\s*)/gi; //去掉空白字符。
-    var reHTML = /<HTML([^>]*)>|<\/HTML>/gi;
-    var reContain = /<HEAD(?:[^>]*)>(?:.*?)<\/HEAD>|<STYLE(?:[^>]*)>(?:.*?)<\/STYLE>|<SCRIPT(?:[^>]*)>(?:.*?)<\/SCRIPT>/gi;
-    var reComment = /<!--(.*?)-->/gi;
-    var reTD = /<TD(?:[^>]*)>(.*?)<\/TD>/gi;
-    var reBlock = /<DIV(?:[^>]*)>(.*?)<\/DIV>/gi;
-    var reBlock2 = /<TR(?:[^>]*)>(.*?)<\/TR>/gi;
-    var reParagraph = /<P(?:[^>]*)>(.*?)<\/P>/gi;
-    var reBR = /<br(\s*)>|<br(\s*)\/>/gi;
-    var reLable = /<([^>]*)>/gi;
-    var reNBSP4 = /&nbsp;&nbsp;&nbsp;&nbsp;/gi;
-    var reNBSP = /&nbsp;/gi;
-    var reQUOT = /&quot;/gi;
-    var reLT = /&lt;/gi;
-    var reGT = /&gt;/gi;
-    var reAMP = /&amp;/gi;
-
-    Html = Html.replace(reSpace, "");
-    Html = Html.replace(reHTML, "");
-    Html = Html.replace(reContain, "");
-    Html = Html.replace(reComment, "");
-    Html = Html.replace(reTD, "$1\t");
-    Html = Html.replace(reBlock, "\r\n$1");
-    Html = Html.replace(reBlock2, "\r\n$1");
-    Html = Html.replace(reParagraph, "\r\n$1\r\n");
-    Html = Html.replace(reBR, "\r\n");
-    Html = Html.replace(reLable, "");
-    Html = Html.replace(reNBSP4, "\t");
-    Html = Html.replace(reNBSP, " ");
-    Html = Html.replace(reQUOT, "\"");
-    Html = Html.replace(reLT, "<");
-    Html = Html.replace(reGT, ">");
-    Html = Html.replace(reAMP, "&");
-
-    return Html;
-}
-
-
