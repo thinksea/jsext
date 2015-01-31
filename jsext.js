@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.2
-last change：2015-1-30
+version：0.3
+last change：2015-1-31
 projects url:https://github.com/thinksea/jsext
 */
 
@@ -315,9 +315,9 @@ Array.prototype.remove = function (o) {
     
 调用示例：
     var s="abc$def";
-    alert(RegExp.prototype.escape(s));//输出 abc\$def。
+    alert(regExpEscape(s));//输出 abc\$def。
 */
-RegExp.prototype.escape = function (str) {
+function regExpEscape(str) {
     return str.replace(/\\/gi, "\\")
     .replace(/\*/gi, "\\*")
     .replace(/\+/gi, "\\+")
@@ -347,10 +347,10 @@ RegExp.prototype.escape = function (str) {
 String.prototype.startsWith = function (s, ignoreCase) {
     var reg;
     if (ignoreCase == true) {
-        reg = new RegExp("^" + RegExp.prototype.escape(s), "gi");
+        reg = new RegExp("^" + regExpEscape(s), "gi");
     }
     else {
-        reg = new RegExp("^" + RegExp.prototype.escape(s), "g");
+        reg = new RegExp("^" + regExpEscape(s), "g");
     }
     return reg.test(this);
 }
@@ -369,10 +369,10 @@ String.prototype.startsWith = function (s, ignoreCase) {
 String.prototype.endsWith = function (s, ignoreCase) {
     var reg;
     if (ignoreCase == true) {
-        reg = new RegExp(RegExp.prototype.escape(s) + "$", "gi");
+        reg = new RegExp(regExpEscape(s) + "$", "gi");
     }
     else {
-        reg = new RegExp(RegExp.prototype.escape(s) + "$", "g");
+        reg = new RegExp(regExpEscape(s) + "$", "g");
     }
     return reg.test(this);
 }
@@ -629,39 +629,39 @@ String.prototype.getFullUri = function () {
 
 /*
 功能：转义一个字符串，使其符合 XML 实体规则。
-参数：无
+参数：
+    str：一个文本片段。
 返回值：符合 XML 实体规则的文本对象。
 */
-String.prototype.xmlEncode = function () {
-    var s = this;
-    s = s.replace(/\&/g, "&amp;");
-    s = s.replace(/\</g, "&lt;");
-    s = s.replace(/\>/g, "&gt;");
-    s = s.replace(/\'/g, "&apos;");
-    s = s.replace(/\"/g, "&quot;");
-    return s;
+function xmlEncode(str) {
+    str = str.replace(/\&/g, "&amp;");
+    str = str.replace(/\</g, "&lt;");
+    str = str.replace(/\>/g, "&gt;");
+    str = str.replace(/\'/g, "&apos;");
+    str = str.replace(/\"/g, "&quot;");
+    return str;
 }
 
 
 /*
 功能：将字符串转换为 HTML 编码的字符串。
-参数：无
+参数：
+    str：要编码的字符串。
 返回值：编码后的 HTML 文本。
 */
-String.prototype.htmlEncode = function () {
-    var s = this;
-    //if (s == null) return null;
-    return s.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
+function htmlEncode(str) {
+    if (str == null) return null;
+    return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
 }
 
 
 /*
 功能：将已经进行过 HTML 编码的字符串转换为已解码的字符串。
-参数：无
+参数：
+    str：要解码的字符串。
 返回值：解码后的 HTML 文本。
 */
-String.prototype.htmlDecode = function () {
-    var s = this;
-    //if (s == null) return null;
-    return s.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
+function htmlDecode(str) {
+    if (str == null) return null;
+    return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }

@@ -60,12 +60,12 @@ a.remove("abc");
 alert(a[0]);
 ```
 
-# RegExp.prototype.escape
+# regExpEscape
 通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。
 
 ```javascript
 var s="abc$def";
-alert(RegExp.prototype.escape(s));//输出 abc\$def。
+alert(regExpEscape(s));//输出 abc\$def。
 ```
 
 # String.prototype.startsWith
@@ -141,12 +141,12 @@ alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http:
 alert("http://www.thinksea.com/../../a/b/../c.htm".getFullUri());//返回值为 http://www.thinksea.com/a/c.htm
 ```
 
-# String.prototype.xmlEncode
+# xmlEncode
 转义一个字符串，使其符合 XML 实体规则。
 
-# String.prototype.htmlEncode
+# htmlEncode
 将字符串转换为 HTML 编码的字符串。
 
-# String.prototype.htmlDecode
+# htmlDecode
 将已经进行过 HTML 编码的字符串转换为已解码的字符串。
 
