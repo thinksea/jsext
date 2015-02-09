@@ -1,6 +1,10 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：0.4
+
++ 1、增加 Date 类型的扩展方法,增加（或减少）年/月/日/时/分/秒/毫秒。
+
 
 # Number.prototype.format
 格式化数字显示方式。 
@@ -33,6 +37,55 @@ d.format("yyyy年MM月dd日 HH:mm:ss")-->2015年01月30日 13:15:38
 d.format("yyyy-MM-dd HH:mm:ss.fff")-->2015-01-30 13:15:38.617
 d.format("yyyy年 MMM dd dddd", "zh_cn")-->2015年 一月 30 星期五
 d.format("yyyy MMM dd dddd", "en")-->2015 Jan 30 Friday
+```
+
+# Date.prototype.addMilliseconds
+增加/减少毫秒。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addMilliseconds(1);
+```
+
+# Date.prototype.addSeconds
+增加/减少秒。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addSeconds(1);
+```
+
+# Date.prototype.addMinutes
+增加/减少分钟。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addMinutes(1);
+```
+
+# Date.prototype.addHours
+增加/减少小时。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addHours(1);
+```
+
+# Date.prototype.addDays
+增加/减少天。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addDays(1);
+```
+
+# Date.prototype.addMonths
+增加/减少月。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addMonths(1);
+```
+
+# Date.prototype.addYears
+增加/减少年。
+
+```javascript
+var d = new Date("2015-01-30 13:15:38.617").addYears(1);
 ```
 
 # Array.prototype.indexOf

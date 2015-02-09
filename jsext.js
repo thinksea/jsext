@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.3
-last change：2015-1-31
+version：0.4
+last change：2015-2-10
 projects url:https://github.com/thinksea/jsext
 */
 
@@ -264,6 +264,90 @@ Date.prototype.formatLocal = {
 
     }
 };
+
+/*
+功能：增加/减少毫秒。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addMilliseconds = function (value) {
+    var date = this;
+    date.setMilliseconds(date.getMilliseconds() + value);
+    return date;
+}
+
+/*
+功能：增加/减少秒。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addSeconds = function (value) {
+    var date = this;
+    date.setSeconds(date.getSeconds() + value);
+    return date;
+}
+
+/*
+功能：增加/减少分钟。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addMinutes = function (value) {
+    var date = this;
+    date.setMinutes(date.getMinutes() + value);
+    return date;
+}
+
+/*
+功能：增加/减少小时。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addHours = function (value) {
+    var date = this;
+    date.setHours(date.getHours() + value);
+    return date;
+}
+
+/*
+功能：增加/减少天。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addDays = function (value) {
+    var date = this;
+    date.setDate(date.getDate() + value);
+    return date;
+}
+
+/*
+功能：增加/减少月。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addMonths = function (value) {
+    var date = this;
+    date.setMonth(date.getMonth() + value);
+    return date;
+}
+
+/*
+功能：增加/减少年。
+参数：
+    value 一个整数，正数表示增加，负数表示减少。
+返回值：调整后的新 Date 实例。
+*/
+Date.prototype.addYears = function (value) {
+    var date = this;
+    date.setFullYear(date.getFullYear() + value);
+    return date;
+}
 
 if (typeof (Array.prototype.indexOf) != "function") {
     /*
