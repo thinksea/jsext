@@ -1,7 +1,8 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.4
-last change：2015-2-10
+version：0.5
+last change：2015-6-24
+Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
 
@@ -459,6 +460,131 @@ String.prototype.endsWith = function (s, ignoreCase) {
         reg = new RegExp(regExpEscape(s) + "$", "g");
     }
     return reg.test(this);
+}
+
+/*
+功能：从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
+参数：
+    trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+返回值：从当前字符串的开头和结尾删除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
+            
+调用示例：
+    alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
+    alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
+    alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
+*/
+String.prototype.trim = function (trimChars) {
+    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+        return this.replace(/^\s*/, '').replace(/\s*$/, '');
+    }
+    else {
+        var sReg = "";
+        if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
+            for (var i = 0; i < trimChars.length; i++) {
+                if (sReg.length > 0) {
+                    sReg += "|";
+                }
+                sReg += regExpEscape(trimChars[i]);
+            }
+        }
+        else { //处理单个字符参数指定排除字符的情况。
+            sReg = regExpEscape(trimChars);
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    if (sReg.length > 0) {
+                        sReg += "|";
+                    }
+                    sReg += regExpEscape(arguments[i]);
+                }
+            }
+        }
+        var rg = new RegExp("^(" + sReg + ")*");
+        var str = this.replace(rg, '');
+        rg = new RegExp("(" + sReg + ")*$");
+        return str.replace(rg, '');
+    }
+}
+
+/*
+功能：从当前 String 对象移除数组中指定的一组字符的所有前导匹配项。（为 JavaScript String 对象添加的扩展方法。）
+参数：
+    trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+返回值：从当前字符串的开头移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
+            
+调用示例：
+    alert("aaabccdeaabaaa".trimStart('a')) //输出“bccdeaabaaa”
+    alert("aaabccdeaabaaa".trimStart(['a', 'b'])) //输出“ccdeaabaaa”
+    alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
+*/
+String.prototype.trimStart = function (trimChars) {
+    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+        return this.replace(/^\s*/, '');
+    }
+    else {
+        var sReg = "";
+        if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
+            for (var i = 0; i < trimChars.length; i++) {
+                if (sReg.length > 0) {
+                    sReg += "|";
+                }
+                sReg += regExpEscape(trimChars[i]);
+            }
+        }
+        else { //处理单个字符参数指定排除字符的情况。
+            sReg = regExpEscape(trimChars);
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    if (sReg.length > 0) {
+                        sReg += "|";
+                    }
+                    sReg += regExpEscape(arguments[i]);
+                }
+            }
+        }
+        var rg = new RegExp("^(" + sReg + ")*");
+        return this.replace(rg, '');
+    }
+}
+
+/*
+功能：从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
+参数：
+    trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+返回值：从当前字符串的结尾移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为删除空白字符。
+            
+调用示例：
+    alert("aaabccdeaabaaa".trimEnd('a')) //输出“aaabccdeaab”
+    alert("aaabccdeaabaaa".trimEnd(['a', 'b'])) //输出“aaabccde”
+    alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
+*/
+String.prototype.trimEnd = function (trimChars) {
+    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+        return this.replace(/\s*$/, '');
+    }
+    else {
+        var sReg = "";
+        if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
+            for (var i = 0; i < trimChars.length; i++) {
+                if (sReg.length > 0) {
+                    sReg += "|";
+                }
+                sReg += regExpEscape(trimChars[i]);
+            }
+        }
+        else { //处理单个字符参数指定排除字符的情况。
+            sReg = regExpEscape(trimChars);
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    if (sReg.length > 0) {
+                        sReg += "|";
+                    }
+                    sReg += regExpEscape(arguments[i]);
+                }
+            }
+        }
+        var rg = new RegExp("(" + sReg + ")*$");
+        return this.replace(rg, '');
+    }
 }
 
 /*
