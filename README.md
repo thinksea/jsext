@@ -1,6 +1,13 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：0.5
+
++ 1、增加 String 类型的扩展方法 trim，从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。
++ 2、增加 String 类型的扩展方法 trimStart，从当前 String 对象移除数组中指定的一组字符的所有前导匹配项。
++ 3、增加 String 类型的扩展方法 trimEnd，从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。
+
+
 ###### version：0.4
 
 + 1、增加 Date 类型的扩展方法,增加（或减少）年/月/日/时/分/秒/毫秒。
@@ -135,6 +142,33 @@ alert(s.startsWith("C",true));//返回值为 false。
 ```javascript
 var s="abc";
 alert(s.endsWith("c"));//返回值为 true。
+```
+
+# String.prototype.trim
+从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。
+
+```javascript
+alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
+alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
+alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
+```
+
+# String.prototype.trimStart
+从当前 String 对象移除数组中指定的一组字符的所有前导匹配项。
+
+```javascript
+alert("aaabccdeaabaaa".trimStart('a')) //输出“bccdeaabaaa”
+alert("aaabccdeaabaaa".trimStart(['a', 'b'])) //输出“ccdeaabaaa”
+alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
+```
+
+# String.prototype.trimEnd
+从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。
+
+```javascript
+alert("aaabccdeaabaaa".trimEnd('a')) //输出“aaabccdeaab”
+alert("aaabccdeaabaaa".trimEnd(['a', 'b'])) //输出“aaabccde”
+alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
 ```
 
 # String.prototype.getFileName
