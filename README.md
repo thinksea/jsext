@@ -1,6 +1,11 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：0.6
+
++ 1、增加 String 类型的扩展方法 toColorHex 和 toColorRGB，实现十六进制颜色值与RGB格式颜色值之间的相互转换。
+
+
 ###### version：0.5
 
 + 1、增加 String 类型的扩展方法 trim，从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。
@@ -223,6 +228,24 @@ alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http:
 
 # String.prototype.getFullUri
 获取指定 Uri 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
+
+```javascript
+var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
+var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+```
+
+# String.prototype.toColorHex
+RGB格式颜色转换为16进制格式。
+
+```javascript
+var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
+var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+```
+
+# String.prototype.toColorRGB
+16进制格式颜色转为RGB格式。
 
 ```javascript
 alert("http://www.thinksea.com/../../a/b/../c.htm".getFullUri());//返回值为 http://www.thinksea.com/a/c.htm

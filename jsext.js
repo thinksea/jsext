@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.5
-last change：2015-6-24
+version：0.6
+last change：2015-8-9
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -835,6 +835,87 @@ String.prototype.getFullUri = function () {
     } while (true);
     return domain.combineUri(r);
 }
+
+
+/*
+功能：RGB格式颜色转换为16进制格式。
+参数：无
+返回值：一个16进制格式的颜色值，如果无法转换则原样返回。
+
+调用示例：十六进制颜色值与RGB格式颜色值之间的相互转换
+    var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+    var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
+    var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+*/
+String.prototype.toColorHex = function () {
+    var that = this;
+    var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
+    if (/^(rgb|RGB)/.test(that) || that.split(",").length == 3) {
+        var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+        if (aColor.length == 0 || (aColor.length == 1 && aColor[0].length == 0)) {
+            return "";
+        }
+        var strHex = "#";
+        for (var i = 0; i < aColor.length; i++) {
+            var hex = Number(aColor[i]).toString(16);
+            if (hex.length == 1) {
+                hex = "0" + hex;
+            }
+            strHex += hex;
+        }
+        if (strHex.length !== 7) {
+            strHex = that;
+        }
+        return strHex;
+    } else if (regHexColor.test(that)) {
+        var aNum = that.replace(/#/, "").split("");
+        if (aNum.length === 6) {
+            return that;
+        } else if (aNum.length === 3) {
+            var numHex = "#";
+            for (var i = 0; i < aNum.length; i += 1) {
+                numHex += (aNum[i] + aNum[i]);
+            }
+            return numHex;
+        }
+    } else {
+        return that;
+    }
+};
+
+
+/*
+功能：16进制格式颜色转为RGB格式。
+参数：无
+返回值：一个RGB格式的颜色值，如果无法转换则原样返回。
+
+调用示例：十六进制颜色值与RGB格式颜色值之间的相互转换
+    var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+    var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
+    var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+*/
+String.prototype.toColorRGB = function () {
+    var sColor = this.toLowerCase();
+    var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
+    if (sColor && regHexColor.test(sColor)) {
+        if (sColor.length === 4) {
+            var sColorNew = "#";
+            for (var i = 1; i < 4; i += 1) {
+                sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+            }
+            sColor = sColorNew;
+        }
+        //处理六位的颜色值  
+        var sColorChange = [];
+        for (var i = 1; i < 7; i += 2) {
+            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
+        }
+        return "RGB(" + sColorChange.join(",") + ")";
+    } else {
+        return sColor;
+    }
+};
+
 
 
 /*
