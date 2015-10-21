@@ -414,32 +414,30 @@ if (typeof (Array.prototype.remove) != "function") {
     }
 }
 
-if (typeof (regExpEscape) != "function") {
-    /*
-    功能：通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。（为 JavaScript RegExp 对象添加的扩展方法。）
-    参数：
-        str：一个可能包含正则表达式元字符的字符串。
-    返回值：替换后的字符串。
+/*
+功能：通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。（为 JavaScript RegExp 对象添加的扩展方法。）
+参数：
+    str：一个可能包含正则表达式元字符的字符串。
+返回值：替换后的字符串。
     
-    调用示例：
-        var s="abc$def";
-        alert(regExpEscape(s));//输出 abc\$def。
-    */
-    function regExpEscape(str) {
-        return str.replace(/\\/gi, "\\")
-        .replace(/\*/gi, "\\*")
-        .replace(/\+/gi, "\\+")
-        .replace(/\?/gi, "\\?")
-        .replace(/\|/gi, "\\|")
-        .replace(/\{/gi, "\\{")
-        .replace(/\[/gi, "\\[")
-        .replace(/\(/gi, "\\(")
-        .replace(/\)/gi, "\\)")
-        .replace(/\^/gi, "\\^")
-        .replace(/\$/gi, "\\$")
-        .replace(/\./gi, "\\.")
-        .replace(/\#/gi, "\\#");
-    }
+调用示例：
+    var s="abc$def";
+    alert(regExpEscape(s));//输出 abc\$def。
+*/
+function regExpEscape(str) {
+    return str.replace(/\\/gi, "\\")
+    .replace(/\*/gi, "\\*")
+    .replace(/\+/gi, "\\+")
+    .replace(/\?/gi, "\\?")
+    .replace(/\|/gi, "\\|")
+    .replace(/\{/gi, "\\{")
+    .replace(/\[/gi, "\\[")
+    .replace(/\(/gi, "\\(")
+    .replace(/\)/gi, "\\)")
+    .replace(/\^/gi, "\\^")
+    .replace(/\$/gi, "\\$")
+    .replace(/\./gi, "\\.")
+    .replace(/\#/gi, "\\#");
 }
 
 if (typeof (String.prototype.startsWith) != "function") {
