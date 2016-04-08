@@ -1,6 +1,11 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：0.7.1
+
++ 1、进行了优化，避免与原生方法冲突。
+
+
 ###### version：0.6
 
 + 1、增加 String 类型的扩展方法 toColorHex 和 toColorRGB，实现十六进制颜色值与RGB格式颜色值之间的相互转换。
