@@ -1001,6 +1001,13 @@ function htmlEncode(str) {
     return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
 }
 
+//function htmlEncode(html) {
+//    var temp = document.createElement("div");
+//    (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+//    var output = temp.innerHTML;
+//    temp = null;
+//    return output;
+//}
 
 /*
 功能：将已经进行过 HTML 编码的字符串转换为已解码的字符串。
