@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "jsext.min.js",
+    "inputFiles": [
+      "jsext.js"
+    ]
+  }
+]
