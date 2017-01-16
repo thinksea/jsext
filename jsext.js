@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.7.1
-last change：2015-10-20
+version：1.0.1
+last change：2017-01-16
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -441,96 +441,96 @@ function regExpEscape(str) {
 }
 
 if (typeof (String.prototype.startsWith) != "function") {
-    /*
-    功能：判断字符串是否以指定的文本为前缀。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        s：判定字符串。
-        ignoreCase：指示是否忽略大小写，默认值为 false。
-    返回值：返回 true 表示字符串以 s 指定的文本开始，否则返回 false。
-    
-    调用示例：
-        var s="abc";
-        alert(s.startsWith("C",true));//返回值为 false。
-    */
-    String.prototype.startsWith = function (s, ignoreCase) {
-        var reg;
-        if (ignoreCase == true) {
-            reg = new RegExp("^" + regExpEscape(s), "gi");
+    /**
+     * 判断字符串是否以指定的文本为前缀。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {String} searchString 要搜索的子字符串。
+     * @param {int} position 在 str 中搜索 searchString 的开始位置，默认值为 0，也就是真正的字符串开头处。
+     * @returns {Boolean} 如果匹配成功返回 true；否则返回 false。
+     * @example
+     * var str = "To be, or not to be, that is the question.";
+     * alert(str.startsWith("To be"));         // true
+     * alert(str.startsWith("not to be"));     // false
+     * alert(str.startsWith("not to be", 10)); // true
+     */
+    String.prototype.startsWith = function (searchString, position) {
+        if (this.length >= searchString.length) {
+            if (position === undefined) {
+                return this.substr(0, searchString.length) == searchString;
+            }
+            else {
+                return this.substr(position, searchString.length) == searchString;
+            }
         }
-        else {
-            reg = new RegExp("^" + regExpEscape(s), "g");
-        }
-        return reg.test(this);
+        return false;
     }
 }
 
 if (typeof (String.prototype.endsWith) != "function") {
-    /*
-    功能：判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        s：判定字符串。
-        ignoreCase：指示是否忽略大小写，默认值为 false。
-    返回值：返回 true 表示字符串以 s 指定的文本结尾，否则返回 false。
-    
-    调用示例：
-        var s="abc";
-        alert(s.endsWith("c"));//返回值为 true。
-    */
-    String.prototype.endsWith = function (s, ignoreCase) {
-        var reg;
-        if (ignoreCase == true) {
-            reg = new RegExp(regExpEscape(s) + "$", "gi");
+    /**
+     * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {String} searchString 要搜索的子字符串。
+     * @param {int} position 在 str 中搜索 searchString 的结束位置，默认值为 str.length，也就是真正的字符串结尾处。
+     * @returns {Boolean} 如果匹配成功返回 true；否则返回 false。
+     * @example
+     * 调用示例：
+     * var str = "To be, or not to be, that is the question.";
+     * alert( str.endsWith("question.") );  // true
+     * alert( str.endsWith("to be") );      // false
+     * alert( str.endsWith("to be", 19) );  // true
+     * alert( str.endsWith("To be", 5) );   // true
+     */
+    String.prototype.endsWith = function (searchString, position) {
+        if (this.length >= searchString.length) {
+            if (position === undefined) {
+                return this.substr(this.length - searchString.length) == searchString;
+            }
+            else {
+                return this.substr(position - searchString.length, searchString.length) == searchString;
+            }
         }
-        else {
-            reg = new RegExp(regExpEscape(s) + "$", "g");
-        }
-        return reg.test(this);
+        return false;
     }
 }
 
-
-if (typeof (String.prototype.trim) != "function") {
-    /*
-    功能：从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
-    返回值：从当前字符串的开头和结尾删除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
-            
-    调用示例：
-        alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
-        alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
-        alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
-    */
-    String.prototype.trim = function (trimChars) {
-        if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
-            return this.replace(/^\s*/, '').replace(/\s*$/, '');
+/**
+ * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
+ * @param {String|Array|null} trimChars 要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+ * @returns {String} 从当前字符串的开头和结尾删除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
+ * @example
+ * 调用示例：
+ * alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
+ * alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
+ * alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
+ */
+String.prototype.trim = function (trimChars) {
+    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+        return this.replace(/^\s*/, '').replace(/\s*$/, '');
+    }
+    else {
+        var sReg = "";
+        if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
+            for (var i = 0; i < trimChars.length; i++) {
+                if (sReg.length > 0) {
+                    sReg += "|";
+                }
+                sReg += regExpEscape(trimChars[i]);
+            }
         }
-        else {
-            var sReg = "";
-            if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
-                for (var i = 0; i < trimChars.length; i++) {
+        else { //处理单个字符参数指定排除字符的情况。
+            sReg = regExpEscape(trimChars);
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
                     if (sReg.length > 0) {
                         sReg += "|";
                     }
-                    sReg += regExpEscape(trimChars[i]);
+                    sReg += regExpEscape(arguments[i]);
                 }
             }
-            else { //处理单个字符参数指定排除字符的情况。
-                sReg = regExpEscape(trimChars);
-                if (arguments.length > 1) {
-                    for (var i = 1; i < arguments.length; i++) {
-                        if (sReg.length > 0) {
-                            sReg += "|";
-                        }
-                        sReg += regExpEscape(arguments[i]);
-                    }
-                }
-            }
-            var rg = new RegExp("^(" + sReg + ")*");
-            var str = this.replace(rg, '');
-            rg = new RegExp("(" + sReg + ")*$");
-            return str.replace(rg, '');
         }
+        var rg = new RegExp("^(" + sReg + ")*");
+        var str = this.replace(rg, '');
+        rg = new RegExp("(" + sReg + ")*$");
+        return str.replace(rg, '');
     }
 }
 
