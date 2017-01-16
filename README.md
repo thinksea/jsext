@@ -1,6 +1,15 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：1.0.1
+
++ 1、修改下列方法，使其与浏览器标准方法声明相同。支持低版本浏览器。（注意：已经更改方法声明，请仔细核对您使用这两个方法的代码。）
+  + String.prototype.startsWith
+  + String.prototype.endsWith
++ 2、修改下列方法，使其兼容浏览器标准方法，并提供功能扩展。
+  + String.prototype.trim
+
+
 ###### version：0.7.1
 
 + 1、进行了优化，避免与原生方法冲突。
