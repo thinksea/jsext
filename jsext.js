@@ -1,38 +1,36 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：0.7.1
-last change：2015-10-20
+version：0.7.2
+last change：2017-6-29
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
 
 if (typeof (Number.prototype.format) != "function") {
-    /* 
-    功能：格式化数字显示方式。
-    参数：
-        pattern 格式化字符串。取值范围如下
-            "0"零占位符。用对应的数字（如果存在）替换零；否则，将在结果字符串中显示零。
-            "#"数字占位符。用对应的数字（如果存在）替换“#”符号；否则，不会在结果字符串中显示任何数字。
-            "."小数点。确定小数点分隔符在结果字符串中的位置。
-            ","组分隔符。它在各个组之间插入组分隔符字符。
-    返回值：替换后的字符串。
-    
-    调用示例：
-        console.log("(123456789012.129).format()-->" + (123456789012.129).format());  //123456789012.129
-        console.log("(123456789012.129).format('')-->" + (123456789012.129).format()); //123456789012.129
-        console.log("(123456789012.129).format('#,##0.00')-->" + (123456789012.129).format('#,##0.00')); //123,456,789,012.13
-        console.log("(123456789012.129).format('#,##0.##')-->" + (123456789012.129).format('#,##0.##')); //123,456,789,012.13
-        console.log("(123456789012.129).format('#,##0.00')-->" + (123456789012.129).format('#,##0.00')); //123,456,789,012.13
-        console.log("(123456789012.129).format('#,##0.##')-->" + (123456789012.129).format('#,##0.##')); //123,456,789,012.13
-        console.log("(12.129).format('0.00')-->" + (12.129).format('0.00')); //12.13
-        console.log("(12.129).format('0.##')-->" + (12.129).format('0.##')); //12.13
-        console.log("(12).format('00000')-->" + (12).format('00000')); //00012
-        console.log("(12).format('#.##')-->" + (12).format('#.##')); //12
-        console.log("(12).format('#.00')-->" + (12).format('#.00')); //12.00
-        console.log("(0).format('#.##')-->" + (0).format('#.##')); //0
-        console.log("(123456).format('.###')-->" + (123456).format('.###')); //123456
-        console.log("(0).format('###.#####')-->" + (0).format('###.#####')); //0
-    */
+    /**
+     * 格式化数字显示方式。
+     * @param {string} pattern 格式化字符串。取值范围如下
+     *     "0"零占位符。用对应的数字（如果存在）替换零；否则，将在结果字符串中显示零。
+     *     "#"数字占位符。用对应的数字（如果存在）替换“#”符号；否则，不会在结果字符串中显示任何数字。
+     *     "."小数点。确定小数点分隔符在结果字符串中的位置。
+     *     ","组分隔符。它在各个组之间插入组分隔符字符。
+     * @returns {string} 替换后的字符串。
+     * @example
+     *     console.log("(123456789012.129).format()-->" + (123456789012.129).format());  //123456789012.129
+     *     console.log("(123456789012.129).format('')-->" + (123456789012.129).format()); //123456789012.129
+     *     console.log("(123456789012.129).format('#,##0.00')-->" + (123456789012.129).format('#,##0.00')); //123,456,789,012.13
+     *     console.log("(123456789012.129).format('#,##0.##')-->" + (123456789012.129).format('#,##0.##')); //123,456,789,012.13
+     *     console.log("(123456789012.129).format('#,##0.00')-->" + (123456789012.129).format('#,##0.00')); //123,456,789,012.13
+     *     console.log("(123456789012.129).format('#,##0.##')-->" + (123456789012.129).format('#,##0.##')); //123,456,789,012.13
+     *     console.log("(12.129).format('0.00')-->" + (12.129).format('0.00')); //12.13
+     *     console.log("(12.129).format('0.##')-->" + (12.129).format('0.##')); //12.13
+     *     console.log("(12).format('00000')-->" + (12).format('00000')); //00012
+     *     console.log("(12).format('#.##')-->" + (12).format('#.##')); //12
+     *     console.log("(12).format('#.00')-->" + (12).format('#.00')); //12.00
+     *     console.log("(0).format('#.##')-->" + (0).format('#.##')); //0
+     *     console.log("(123456).format('.###')-->" + (123456).format('.###')); //123456
+     *     console.log("(0).format('###.#####')-->" + (0).format('###.#####')); //0
+     */
     Number.prototype.format = function (pattern) {
         if (!pattern) return this.toString();
 
@@ -106,69 +104,66 @@ if (typeof (Number.prototype.format) != "function") {
 
 
 if (typeof (Date.prototype.format) != "function") {
-    /*
-    功能：格式化 Date 显示方式。
-    参数：
-        format 格式化字符串。取值范围参考“自定义日期和时间格式字符串”
-        local 语言设置。取值范围：目前只支持“en”与“zh_cn”。
-    返回值：替换后的字符串。
-    
-    自定义日期和时间格式字符串：
-    “d”一个月中的某一天（1 到 31）。
-    “dd”一个月中的某一天（01 到 31）。
-    “ddd”一周中某天的缩写名称。
-    “dddd”一周中某天的完整名称。
-    “f”日期和时间值的十分之几秒。
-    6/15/2009 13:45:30.617 -> 6
-    6/15/2009 13:45:30.050 -> 0
-    “ff”日期和时间值的百分之几秒。
-    6/15/2009 13:45:30.617 -> 61
-    6/15/2009 13:45:30.005 -> 00
-    “fff”日期和时间值的毫秒。
-    6/15/2009 13:45:30.617 -> 617
-    6/15/2009 13:45:30.0005 -> 000
-    “F”如果非零，则为日期和时间值的十分之几秒。
-    6/15/2009 13:45:30.617 -> 6
-    6/15/2009 13:45:30.050 ->（无输出）
-    “FF”如果非零，则为日期和时间值的百分之几秒。
-    6/15/2009 13:45:30.617 -> 61
-    6/15/2009 13:45:30.005 ->（无输出）
-    “FFF”如果非零，则为日期和时间值的毫秒。
-    6/15/2009 13:45:30.617 -> 617
-    6/15/2009 13:45:30.0005 ->（无输出）
-    “h”采用 12 小时制的小时（从 1 到 12）。
-    “hh”采用 12 小时制的小时（从 01 到 12）。
-    “H”采用 24 小时制的小时（从 0 到 23）。
-    “HH”采用 24 小时制的小时（从 00 到 23）。
-    “m”分钟（0 到 59）。
-    “mm”分钟（00 到 59）。
-    “M”月份（1 到 12）。
-    “MM”月份（01 到 12）。
-    “MMM”月份的缩写名称。
-    “MMMM”月份的完整名称。
-    “s”秒（0 到 59）。
-    “ss”秒（00 到 59）。
-    “t”AM/PM 指示符的第一个字符。
-    6/15/2009 1:45:30 PM -> P
-    6/15/2009 1:45:30 PM -> 午
-    “tt”AM/PM 指示符。
-    6/15/2009 1:45:30 PM -> PM
-    6/15/2009 1:45:30 PM -> 午後
-    “y”年份（0 到 99）。
-    “yy”年份（00 到 99）。
-    “yyy”年份（最少三位数字）。
-    “yyyy”由四位数字表示的年份。
-    
-    调用示例：
-        var d = new Date("2015-01-30 13:15:38.617");
-        console.log('d.format()-->' + d.format());    //Fri Jan 30 2015 13:15:38 GMT+0800 (中国标准时间)
-        console.log('d.format("")-->' + d.format(""));    //Fri Jan 30 2015 13:15:38 GMT+0800 (中国标准时间)
-        console.log('d.format("yyyy-MM-dd HH:mm:ss")-->' + d.format("yyyy-MM-dd HH:mm:ss"));    //2015-01-30 13:15:38
-        console.log('d.format("yyyy年MM月dd日 HH:mm:ss")-->' + d.format("yyyy年MM月dd日 HH:mm:ss"));    //2015年01月30日 13:15:38
-        console.log('d.format("yyyy-MM-dd HH:mm:ss.fff")-->' + d.format("yyyy-MM-dd HH:mm:ss.fff"));    //2015-01-30 13:15:38.617
-        console.log('d.format("yyyy年 MMM dd dddd", "zh_cn")-->' + d.format("yyyy年 MMM dd dddd", "zh_cn"));    //2015年 一月 30 星期五
-        console.log('d.format("yyyy MMM dd dddd", "en")-->' + d.format("yyyy MMM dd dddd", "en"));    //2015 Jan 30 Friday
-    */
+    /**
+     * 格式化 Date 显示方式。
+     * @param {string} format 格式化字符串。取值范围参考“自定义日期和时间格式字符串”
+     * @param {string} local 语言设置。取值范围：目前只支持“en”与“zh_cn”。
+     * @returns {string} 替换后的字符串。
+     *     自定义日期和时间格式字符串：
+     *     “d”一个月中的某一天（1 到 31）。
+     *     “dd”一个月中的某一天（01 到 31）。
+     *     “ddd”一周中某天的缩写名称。
+     *     “dddd”一周中某天的完整名称。
+     *     “f”日期和时间值的十分之几秒。
+     *     6/15/2009 13:45:30.617 -> 6
+     *     6/15/2009 13:45:30.050 -> 0
+     *     “ff”日期和时间值的百分之几秒。
+     *     6/15/2009 13:45:30.617 -> 61
+     *     6/15/2009 13:45:30.005 -> 00
+     *     “fff”日期和时间值的毫秒。
+     *     6/15/2009 13:45:30.617 -> 617
+     *     6/15/2009 13:45:30.0005 -> 000
+     *     “F”如果非零，则为日期和时间值的十分之几秒。
+     *     6/15/2009 13:45:30.617 -> 6
+     *     6/15/2009 13:45:30.050 ->（无输出）
+     *     “FF”如果非零，则为日期和时间值的百分之几秒。
+     *     6/15/2009 13:45:30.617 -> 61
+     *     6/15/2009 13:45:30.005 ->（无输出）
+     *     “FFF”如果非零，则为日期和时间值的毫秒。
+     *     6/15/2009 13:45:30.617 -> 617
+     *     6/15/2009 13:45:30.0005 ->（无输出）
+     *     “h”采用 12 小时制的小时（从 1 到 12）。
+     *     “hh”采用 12 小时制的小时（从 01 到 12）。
+     *     “H”采用 24 小时制的小时（从 0 到 23）。
+     *     “HH”采用 24 小时制的小时（从 00 到 23）。
+     *     “m”分钟（0 到 59）。
+     *     “mm”分钟（00 到 59）。
+     *     “M”月份（1 到 12）。
+     *     “MM”月份（01 到 12）。
+     *     “MMM”月份的缩写名称。
+     *     “MMMM”月份的完整名称。
+     *     “s”秒（0 到 59）。
+     *     “ss”秒（00 到 59）。
+     *     “t”AM/PM 指示符的第一个字符。
+     *     6/15/2009 1:45:30 PM -> P
+     *     6/15/2009 1:45:30 PM -> 午
+     *     “tt”AM/PM 指示符。
+     *     6/15/2009 1:45:30 PM -> PM
+     *     6/15/2009 1:45:30 PM -> 午後
+     *     “y”年份（0 到 99）。
+     *     “yy”年份（00 到 99）。
+     *     “yyy”年份（最少三位数字）。
+     *     “yyyy”由四位数字表示的年份。
+     * @example
+     *     var d = new Date("2015-01-30 13:15:38.617");
+     *     console.log('d.format()-->' + d.format());    //Fri Jan 30 2015 13:15:38 GMT+0800 (中国标准时间)
+     *     console.log('d.format("")-->' + d.format(""));    //Fri Jan 30 2015 13:15:38 GMT+0800 (中国标准时间)
+     *     console.log('d.format("yyyy-MM-dd HH:mm:ss")-->' + d.format("yyyy-MM-dd HH:mm:ss"));    //2015-01-30 13:15:38
+     *     console.log('d.format("yyyy年MM月dd日 HH:mm:ss")-->' + d.format("yyyy年MM月dd日 HH:mm:ss"));    //2015年01月30日 13:15:38
+     *     console.log('d.format("yyyy-MM-dd HH:mm:ss.fff")-->' + d.format("yyyy-MM-dd HH:mm:ss.fff"));    //2015-01-30 13:15:38.617
+     *     console.log('d.format("yyyy年 MMM dd dddd", "zh_cn")-->' + d.format("yyyy年 MMM dd dddd", "zh_cn"));    //2015年 一月 30 星期五
+     *     console.log('d.format("yyyy MMM dd dddd", "en")-->' + d.format("yyyy MMM dd dddd", "en"));    //2015 Jan 30 Friday
+     */
     Date.prototype.format = function (pattern, local) {
         if (!pattern) return this.toString();
 
@@ -273,12 +268,11 @@ if (!Date.prototype.formatLocal) {
 }
 
 if (typeof (Date.prototype.addMilliseconds) != "function") {
-    /*
-    功能：增加/减少毫秒。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少毫秒。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addMilliseconds = function (value) {
         var date = this;
         date.setMilliseconds(date.getMilliseconds() + value);
@@ -287,12 +281,11 @@ if (typeof (Date.prototype.addMilliseconds) != "function") {
 }
 
 if (typeof (Date.prototype.addSeconds) != "function") {
-    /*
-    功能：增加/减少秒。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少秒。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addSeconds = function (value) {
         var date = this;
         date.setSeconds(date.getSeconds() + value);
@@ -301,12 +294,11 @@ if (typeof (Date.prototype.addSeconds) != "function") {
 }
 
 if (typeof (Date.prototype.addMinutes) != "function") {
-    /*
-    功能：增加/减少分钟。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少分钟。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addMinutes = function (value) {
         var date = this;
         date.setMinutes(date.getMinutes() + value);
@@ -315,12 +307,11 @@ if (typeof (Date.prototype.addMinutes) != "function") {
 }
 
 if (typeof (Date.prototype.addHours) != "function") {
-    /*
-    功能：增加/减少小时。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少小时。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addHours = function (value) {
         var date = this;
         date.setHours(date.getHours() + value);
@@ -329,12 +320,11 @@ if (typeof (Date.prototype.addHours) != "function") {
 }
 
 if (typeof (Date.prototype.addDays) != "function") {
-    /*
-    功能：增加/减少天。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少天。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addDays = function (value) {
         var date = this;
         date.setDate(date.getDate() + value);
@@ -343,12 +333,11 @@ if (typeof (Date.prototype.addDays) != "function") {
 }
 
 if (typeof (Date.prototype.addMonths) != "function") {
-    /*
-    功能：增加/减少月。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少月。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addMonths = function (value) {
         var date = this;
         date.setMonth(date.getMonth() + value);
@@ -357,12 +346,11 @@ if (typeof (Date.prototype.addMonths) != "function") {
 }
 
 if (typeof (Date.prototype.addYears) != "function") {
-    /*
-    功能：增加/减少年。
-    参数：
-        value 一个整数，正数表示增加，负数表示减少。
-    返回值：调整后的新 Date 实例。
-    */
+    /**
+     * 增加/减少年。
+     * @param {number} value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
     Date.prototype.addYears = function (value) {
         var date = this;
         date.setFullYear(date.getFullYear() + value);
@@ -371,18 +359,17 @@ if (typeof (Date.prototype.addYears) != "function") {
 }
 
 if (typeof (Array.prototype.indexOf) != "function") {
-    /*
-    功能：获取一个元素在 Array 中的索引值。（为 JavaScript Array 对象添加的扩展方法。）
-    参数：
-        p_var：要检索的元素。
-    返回值：元素的索引值。找不到返回 -1。
-    调用示例：
-        var a = new Array();
-        a.push("abc");
-        a.push("def");
-        alert(a.indexOf("abc"));
-        alert(a.indexOf("def"));
-    */
+    /**
+     * 获取一个元素在 Array 中的索引值。（为 JavaScript Array 对象添加的扩展方法。）
+     * @param {any} p_var 要检索的元素。
+     * @returns {number} 元素的索引值。找不到返回 -1。
+     * @example
+     *     var a = new Array();
+     *     a.push("abc");
+     *     a.push("def");
+     *     alert(a.indexOf("abc"));
+     *     alert(a.indexOf("def"));
+     */
     Array.prototype.indexOf = function (p_var) {
         for (var i = 0; i < this.length; i++) {
             if (this[i] == p_var) {
@@ -394,19 +381,18 @@ if (typeof (Array.prototype.indexOf) != "function") {
 }
 
 if (typeof (Array.prototype.remove) != "function") {
-    /*
-    功能：从 Array 中删除一个元素。（为 JavaScript Array 对象添加的扩展方法。）
-    参数：
-        o：要删除的元素。
-    返回值：找到并且成功删除返回 true。否则返回 false。
-    调用示例：
-        var a = new Array();
-        a.push("abc");
-        a.push("def");
-        alert(a[0]);
-        a.remove("abc");
-        alert(a[0]);
-    */
+    /**
+     * 从 Array 中删除一个元素。（为 JavaScript Array 对象添加的扩展方法。）
+     * @param {any} o 要删除的元素。
+     * @returns {boolean} 找到并且成功删除返回 true。否则返回 false。
+     * @example
+     *     var a = new Array();
+     *     a.push("abc");
+     *     a.push("def");
+     *     alert(a[0]);
+     *     a.remove("abc");
+     *     alert(a[0]);
+     */
     Array.prototype.remove = function (o) {
         var i = this.indexOf(o);
         if (i > -1) this.splice(i, 1);
@@ -414,44 +400,40 @@ if (typeof (Array.prototype.remove) != "function") {
     }
 }
 
-/*
-功能：通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。（为 JavaScript RegExp 对象添加的扩展方法。）
-参数：
-    str：一个可能包含正则表达式元字符的字符串。
-返回值：替换后的字符串。
-    
-调用示例：
-    var s="abc$def";
-    alert(regExpEscape(s));//输出 abc\$def。
-*/
+/**
+* 通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。（为 JavaScript RegExp 对象添加的扩展方法。）
+     * @param {string} str 一个可能包含正则表达式元字符的字符串。
+     * @returns {string} 替换后的字符串。
+     * @example
+     *     var s="abc$def";
+     *     alert(regExpEscape(s));//输出 abc\$def。
+     */
 function regExpEscape(str) {
     return str.replace(/\\/gi, "\\")
-    .replace(/\*/gi, "\\*")
-    .replace(/\+/gi, "\\+")
-    .replace(/\?/gi, "\\?")
-    .replace(/\|/gi, "\\|")
-    .replace(/\{/gi, "\\{")
-    .replace(/\[/gi, "\\[")
-    .replace(/\(/gi, "\\(")
-    .replace(/\)/gi, "\\)")
-    .replace(/\^/gi, "\\^")
-    .replace(/\$/gi, "\\$")
-    .replace(/\./gi, "\\.")
-    .replace(/\#/gi, "\\#");
+        .replace(/\*/gi, "\\*")
+        .replace(/\+/gi, "\\+")
+        .replace(/\?/gi, "\\?")
+        .replace(/\|/gi, "\\|")
+        .replace(/\{/gi, "\\{")
+        .replace(/\[/gi, "\\[")
+        .replace(/\(/gi, "\\(")
+        .replace(/\)/gi, "\\)")
+        .replace(/\^/gi, "\\^")
+        .replace(/\$/gi, "\\$")
+        .replace(/\./gi, "\\.")
+        .replace(/\#/gi, "\\#");
 }
 
 if (typeof (String.prototype.startsWith) != "function") {
-    /*
-    功能：判断字符串是否以指定的文本为前缀。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        s：判定字符串。
-        ignoreCase：指示是否忽略大小写，默认值为 false。
-    返回值：返回 true 表示字符串以 s 指定的文本开始，否则返回 false。
-    
-    调用示例：
-        var s="abc";
-        alert(s.startsWith("C",true));//返回值为 false。
-    */
+    /**
+     * 判断字符串是否以指定的文本为前缀。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {string} s 判定字符串。
+     * @param {boolean} ignoreCase：指示是否忽略大小写，默认值为 false。
+     * @returns {boolean} 返回 true 表示字符串以 s 指定的文本开始，否则返回 false。
+     * @example
+     *     var s="abc";
+     *     alert(s.startsWith("C",true));//返回值为 false。
+     */
     String.prototype.startsWith = function (s, ignoreCase) {
         var reg;
         if (ignoreCase == true) {
@@ -465,17 +447,15 @@ if (typeof (String.prototype.startsWith) != "function") {
 }
 
 if (typeof (String.prototype.endsWith) != "function") {
-    /*
-    功能：判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        s：判定字符串。
-        ignoreCase：指示是否忽略大小写，默认值为 false。
-    返回值：返回 true 表示字符串以 s 指定的文本结尾，否则返回 false。
-    
-    调用示例：
-        var s="abc";
-        alert(s.endsWith("c"));//返回值为 true。
-    */
+    /**
+     * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {string} s 判定字符串。
+     * @param {boolean} ignoreCase：指示是否忽略大小写，默认值为 false。
+     * @returns {boolean} 返回 true 表示字符串以 s 指定的文本结尾，否则返回 false。
+     * @example
+     *     var s="abc";
+     *     alert(s.endsWith("c"));//返回值为 true。
+     */
     String.prototype.endsWith = function (s, ignoreCase) {
         var reg;
         if (ignoreCase == true) {
@@ -490,17 +470,15 @@ if (typeof (String.prototype.endsWith) != "function") {
 
 
 if (typeof (String.prototype.trim) != "function") {
-    /*
-    功能：从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
-    返回值：从当前字符串的开头和结尾删除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
-            
-    调用示例：
-        alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
-        alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
-        alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
-    */
+    /**
+     * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {Array|null} trimChars 要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+     * @returns {string} 从当前字符串的开头和结尾删除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
+     * @example
+     *     alert("aaabccdeaabaaa".trim('a')) //输出“bccdeaab”
+     *     alert("aaabccdeaabaaa".trim(['a', 'b'])) //输出“ccde”
+     *     alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
+     */
     String.prototype.trim = function (trimChars) {
         if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/^\s*/, '').replace(/\s*$/, '');
@@ -536,17 +514,15 @@ if (typeof (String.prototype.trim) != "function") {
 
 
 if (typeof (String.prototype.trimStart) != "function") {
-    /*
-    功能：从当前 String 对象移除数组中指定的一组字符的所有前导匹配项。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
-    返回值：从当前字符串的开头移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
-            
-    调用示例：
-        alert("aaabccdeaabaaa".trimStart('a')) //输出“bccdeaabaaa”
-        alert("aaabccdeaabaaa".trimStart(['a', 'b'])) //输出“ccdeaabaaa”
-        alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
-    */
+    /**
+     * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {Array|null} trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+     * @returns {string} 从当前字符串的开头移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为移除空白字符。
+     * @example
+     *     alert("aaabccdeaabaaa".trimStart('a')) //输出“bccdeaabaaa”
+     *     alert("aaabccdeaabaaa".trimStart(['a', 'b'])) //输出“ccdeaabaaa”
+     *     alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
+     */
     String.prototype.trimStart = function (trimChars) {
         if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/^\s*/, '');
@@ -579,17 +555,15 @@ if (typeof (String.prototype.trimStart) != "function") {
 }
 
 if (typeof (String.prototype.trimEnd) != "function") {
-    /*
-    功能：从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
-    参数：
-        trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
-    返回值：从当前字符串的结尾移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为删除空白字符。
-            
-    调用示例：
-        alert("aaabccdeaabaaa".trimEnd('a')) //输出“aaabccdeaab”
-        alert("aaabccdeaabaaa".trimEnd(['a', 'b'])) //输出“aaabccde”
-        alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
-    */
+    /**
+     * 从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
+     * @param {Array|null} trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
+     * @returns {string} 从当前字符串的结尾移除所出现的所有 trimChars 参数中的字符后剩余的字符串。 如果 trimChars 为 null 或空数组，则改为删除空白字符。
+     * @example
+     *     alert("aaabccdeaabaaa".trimEnd('a')) //输出“aaabccdeaab”
+     *     alert("aaabccdeaabaaa".trimEnd(['a', 'b'])) //输出“aaabccde”
+     *     alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
+     */
     String.prototype.trimEnd = function (trimChars) {
         if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/\s*$/, '');
@@ -622,14 +596,13 @@ if (typeof (String.prototype.trimEnd) != "function") {
 }
 
 if (typeof (String.prototype.getFileName) != "function") {
-    /*
-    功能：获取文件全名。（为 JavaScript String 对象添加的扩展方法。）
-    返回值：文件名。
-
-    调用示例：
-        console.log("c:\\a\\b\\d.e.txt".getFileName()); //d.e.txt
-        console.log("http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getFileName()); //d.e.htm
-    */
+    /**
+     * 获取文件全名。（为 JavaScript String 对象添加的扩展方法。）
+     * @returns {string} 文件名。
+     * @example
+     *     console.log("c:\\a\\b\\d.e.txt".getFileName()); //d.e.txt
+     *     console.log("http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getFileName()); //d.e.htm
+     */
     String.prototype.getFileName = function () {
         var right = this.lastIndexOf("?");
         if (right == -1) {
@@ -650,14 +623,13 @@ if (typeof (String.prototype.getFileName) != "function") {
 }
 
 if (typeof (String.prototype.getExtensionName) != "function") {
-    /*
-    功能：获取文件扩展名。（为 JavaScript String 对象添加的扩展方法。）
-    返回值：获取到的文件扩展名，如果有（以.为前缀）。
-
-    调用示例：
-        console.log("c:\\a\\b\\d.e.txt".getExtensionName()); //.txt
-        console.log("http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getExtensionName()); //.htm
-    */
+    /**
+     * 获取文件扩展名。（为 JavaScript String 对象添加的扩展方法。）
+     * @returns {string} 获取到的文件扩展名，如果有（以.为前缀）。
+     * @example
+     *     console.log("c:\\a\\b\\d.e.txt".getExtensionName()); //.txt
+     *     console.log("http://www.mysite.com/b/d.e.htm?id=j.pp/ext.jpg".getExtensionName()); //.htm
+     */
     String.prototype.getExtensionName = function () {
         var fileName = this.getFileName();
         var dot = fileName.lastIndexOf(".");
@@ -669,12 +641,11 @@ if (typeof (String.prototype.getExtensionName) != "function") {
 }
 
 if (typeof (String.prototype.getUriParameter) != "function") {
-    /*
-功能：从指定的 URI 中获取指定的参数的值。
-参数：
-name：参数名。
-返回值：找不到返回 null，否则返回找到的值。
-*/
+    /**
+     * 从指定的 URI 中获取指定的参数的值。
+     * @param {string} name 参数名。
+     * @returns {string} 找不到返回 null，否则返回找到的值。
+     */
     String.prototype.getUriParameter = function (name) {
         var uri = this;
         //uri = unescape(uri);
@@ -688,27 +659,26 @@ name：参数名。
 }
 
 if (typeof (String.prototype.setUriParameter) != "function") {
-    /*
-    功能：为指定的 URI 设置参数。
-    参数：
-        name：参数名。
-        Value：新的参数值。
-    返回值：处理后的 uri。
-    备注：如果参数存在则更改它的值，否则添加这个参数。
-    */
-    String.prototype.setUriParameter = function (name, Value) {
+    /**
+     * 为指定的 URI 设置参数。
+     * @param {string} name 参数名。
+     * @param {string} value 新的参数值。
+     * @returns {string} 处理后的 uri。
+     * @description 如果参数存在则更改它的值，否则添加这个参数。
+     */
+    String.prototype.setUriParameter = function (name, value) {
         var uri = this;
         uri = uri.replace(/(\s|\?)*$/g, "");//消除 URI 中无参数但存在问号“...?”这种 URI 中的问号。
         if (uri.indexOf("?") == -1) {//如果无参数。
-            return uri + "?" + name + "=" + encodeURIComponent(Value);
+            return uri + "?" + name + "=" + encodeURIComponent(value);
         }
         else {//如果有参数。
             var reg = new RegExp("(\\?|&)" + name.replace(/\$/gi, "\\$") + "=([^&]*)", "gi");//测试可能被替换的参数的正则表达式。
             if (reg.test(uri)) {//如果存在同名参数。
-                return uri.replace(reg, "$1" + name.replace(/\$/gi, "$$$$") + "=" + encodeURIComponent(Value));
+                return uri.replace(reg, "$1" + name.replace(/\$/gi, "$$$$") + "=" + encodeURIComponent(value));
             }
             else {//如果无同名参数。
-                return uri + "&" + name + "=" + encodeURIComponent(Value);
+                return uri + "&" + name + "=" + encodeURIComponent(value);
             }
         }
     }
@@ -716,12 +686,11 @@ if (typeof (String.prototype.setUriParameter) != "function") {
 
 
 if (typeof (String.prototype.removeUriParameter) != "function") {
-    /*
-    功能：从指定的 URI 删除参数。
-    参数：
-        name：参数名。
-    返回值：处理后的 uri。
-    */
+    /**
+     * 从指定的 URI 删除参数。
+     * @param {string} name 参数名。
+     * @returns {string} 处理后的 uri。
+     */
     String.prototype.removeUriParameter = function (name) {
         var uri = this;
         name = name.replace(/\$/gi, "\\$");
@@ -740,11 +709,10 @@ if (typeof (String.prototype.removeUriParameter) != "function") {
 
 
 if (typeof (String.prototype.clearUriParameter) != "function") {
-    /*
-    功能：从指定的 URI 删除所有参数（从问号“?”开始到字符串结束的子串），只保留问号“?”之前的部分。
-    参数：无
-    返回值：处理后的 uri。
-    */
+    /**
+     * 从指定的 URI 删除所有参数（从问号“?”开始到字符串结束的子串），只保留问号“?”之前的部分。
+     * @returns {string} 处理后的 uri。
+     */
     String.prototype.clearUriParameter = function () {
         var uri = this;
         var reg = /\?(.*)/gi
@@ -757,14 +725,12 @@ if (typeof (String.prototype.clearUriParameter) != "function") {
 
 
 if (typeof (String.prototype.getUriProtocolAndDomain) != "function") {
-    /*
-    功能：获取指定的 URI 的协议和域名部分。
-    参数：无
-    返回值：找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
-
-    调用示例：
-        alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
-    */
+    /**
+     * 获取指定的 URI 的协议和域名部分。
+     * @returns {string} 找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
+     * @example
+     *     alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
+     */
     String.prototype.getUriProtocolAndDomain = function () {
         /// <summary>
         /// 获取指定的 URI 的协议和域名部分。
@@ -784,24 +750,23 @@ if (typeof (String.prototype.getUriProtocolAndDomain) != "function") {
 }
 
 if (typeof (String.prototype.getUriPath) != "function") {
-    /*
-    功能：获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以左下划线“/”为后缀。
-    参数：无
-    返回值：找不到返回 null，否则返回找到的值。
-    备注：下列情况中(*.*)视为文件名
-        1、xxxx://domain/(*.*)
-        2、xxxx://domain/(*.*)?parameters
-        注意：由于 URL 存在的允许特殊使用原因，下列特殊情况不包含在内，即以路径分隔符结束的情况：
-        1、xxxx://domain/(*.*)/
-        2、xxxx://domain/(*.*)/?parameters
-    调用示例：
-        alert("http://www.thinksea.com/a.aspx?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
-        alert("http://www.thinksea.com/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
-        alert("http://www.thinksea.com?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
-        alert("http://www.thinksea.com/".getUriPath());//输出 http://www.thinksea.com/
-        alert("http://www.thinksea.com".getUriPath());//输出 http://www.thinksea.com/
-        alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/a.aspx/
-    */
+    /**
+     * 获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以左下划线“/”为后缀。
+     * @returns {string} 找不到返回 null，否则返回找到的值。
+     * @description 下列情况中(*.*)视为文件名
+     *     1、xxxx://domain/(*.*)
+     *     2、xxxx://domain/(*.*)?parameters
+     *     注意：由于 URL 存在的允许特殊使用原因，下列特殊情况不包含在内，即以路径分隔符结束的情况：
+     *     1、xxxx://domain/(*.*)/
+     *     2、xxxx://domain/(*.*)/?parameters
+     * @example
+     *     alert("http://www.thinksea.com/a.aspx?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+     *     alert("http://www.thinksea.com/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+     *     alert("http://www.thinksea.com?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/
+     *     alert("http://www.thinksea.com/".getUriPath());//输出 http://www.thinksea.com/
+     *     alert("http://www.thinksea.com".getUriPath());//输出 http://www.thinksea.com/
+     *     alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/a.aspx/
+     */
     String.prototype.getUriPath = function () {
         var uri = this;
         if (uri == undefined || uri == null || uri == "") {
@@ -824,18 +789,14 @@ if (typeof (String.prototype.getUriPath) != "function") {
 
 
 if (typeof (String.prototype.combineUri) != "function") {
-    /*
-    功能：返回当前路径与指定路径的组合。
-    参数：
-        uri2：第2个 uri 字符串。
-    返回值：如果任何一个路径为空字符串，则返回另一个路径的值。
-        如果 uri2 包含绝对路径则返回 uri2。
-        否则返回两个路径的组合。
-
-    调用示例：
-        alert("http://www.thinksea.com/a".combineUri("b/c.htm"));//返回值为 http://www.thinksea.com/a/b/c.htm
-        alert("http://www.thinksea.com/a".combineUri("/b/c.htm"));//返回值为 http://www.thinksea.com/b/c.htm
-    */
+    /**
+     * 返回当前路径与指定路径的组合。
+     * @param {string} uri2 第2个 uri 字符串。
+     * @returns {string} 如果任何一个路径为空字符串，则返回另一个路径的值；如果 uri2 包含绝对路径则返回 uri2；否则返回两个路径的组合。
+     * @example
+     *     alert("http://www.thinksea.com/a".combineUri("b/c.htm"));//返回值为 http://www.thinksea.com/a/b/c.htm
+     *     alert("http://www.thinksea.com/a".combineUri("/b/c.htm"));//返回值为 http://www.thinksea.com/b/c.htm
+     */
     String.prototype.combineUri = function (uri2) {
         var uri1 = this;
         if (uri1 == "") return uri2;
@@ -858,14 +819,12 @@ if (typeof (String.prototype.combineUri) != "function") {
 }
 
 if (typeof (String.prototype.getFullUri) != "function") {
-    /*
-    功能：获取指定 Uri 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
-    参数：无
-    返回值：处理后的 uri。
-
-    调用示例：
-        alert("http://www.thinksea.com/../../a/b/../c.htm".getFullUri());//返回值为 http://www.thinksea.com/a/c.htm
-    */
+    /**
+     * 获取指定 Uri 的最短路径。通过转化其中的 ../ 等内容，使其尽可能缩短。
+     * @returns {string} 处理后的 uri。
+     * @example
+     *     alert("http://www.thinksea.com/../../a/b/../c.htm".getFullUri());//返回值为 http://www.thinksea.com/a/c.htm
+     */
     String.prototype.getFullUri = function () {
         var uri = this;
         var domain = uri.getUriProtocolAndDomain();
@@ -890,16 +849,14 @@ if (typeof (String.prototype.getFullUri) != "function") {
 }
 
 if (typeof (String.prototype.toColorHex) != "function") {
-    /*
-    功能：RGB格式颜色转换为16进制格式。
-    参数：无
-    返回值：一个16进制格式的颜色值，如果无法转换则原样返回。
-
-    调用示例：十六进制颜色值与RGB格式颜色值之间的相互转换
-        var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
-        var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
-        var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
-    */
+    /**
+     * RGB格式颜色转换为16进制格式。
+     * @returns {string} 一个16进制格式的颜色值，如果无法转换则原样返回。
+     * @example 十六进制颜色值与RGB格式颜色值之间的相互转换
+     *     var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+     *     var sHexColor = sRgb.toColorHex();//转换为十六进制方法
+     *     var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+     */
     String.prototype.toColorHex = function () {
         var that = this;
         var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
@@ -939,16 +896,14 @@ if (typeof (String.prototype.toColorHex) != "function") {
 
 
 if (typeof (String.prototype.toColorRGB) != "function") {
-    /*
-    功能：16进制格式颜色转为RGB格式。
-    参数：无
-    返回值：一个RGB格式的颜色值，如果无法转换则原样返回。
-
-    调用示例：十六进制颜色值与RGB格式颜色值之间的相互转换
-        var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
-        var sHexColor = sRgb.toColorHex();//转换为十六进制方法 
-        var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
-    */
+    /**
+     * 16进制格式颜色转为RGB格式。
+     * @returns {string} 一个RGB格式的颜色值，如果无法转换则原样返回。
+     * @example 十六进制颜色值与RGB格式颜色值之间的相互转换
+     *     var sRgb = "RGB(255, 255, 255)", sHex = "#00538b";
+     *     var sHexColor = sRgb.toColorHex();//转换为十六进制方法
+     *     var sRgbColor = sHex.toColorRGB();//转为RGB颜色值的方法
+     */
     String.prototype.toColorRGB = function () {
         var sColor = this.toLowerCase();
         var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
@@ -974,12 +929,11 @@ if (typeof (String.prototype.toColorRGB) != "function") {
 
 
 
-/*
-功能：转义一个字符串，使其符合 XML 实体规则。
-参数：
-    str：一个文本片段。
-返回值：符合 XML 实体规则的文本对象。
-*/
+/**
+ * 转义一个字符串，使其符合 XML 实体规则。
+ * @param {string} str 一个文本片段。
+ * @returns {string} 符合 XML 实体规则的文本对象。
+ */
 function xmlEncode(str) {
     str = str.replace(/\&/g, "&amp;");
     str = str.replace(/\</g, "&lt;");
@@ -990,12 +944,11 @@ function xmlEncode(str) {
 }
 
 
-/*
-功能：将字符串转换为 HTML 编码的字符串。
-参数：
-    str：要编码的字符串。
-返回值：编码后的 HTML 文本。
-*/
+/**
+ * 将字符串转换为 HTML 编码的字符串。
+ * @param {string} str 要编码的字符串。
+ * @returns {string} 编码后的 HTML 文本。
+ */
 function htmlEncode(str) {
     if (str == null) return null;
     return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
@@ -1009,12 +962,11 @@ function htmlEncode(str) {
 //    return output;
 //}
 
-/*
-功能：将已经进行过 HTML 编码的字符串转换为已解码的字符串。
-参数：
-    str：要解码的字符串。
-返回值：解码后的 HTML 文本。
-*/
+/**
+ * 将已经进行过 HTML 编码的字符串转换为已解码的字符串。
+ * @param {string} str 要解码的字符串。
+ * @returns {string} 解码后的 HTML 文本。
+ */
 function htmlDecode(str) {
     if (str == null) return null;
     return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");

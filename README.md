@@ -1,6 +1,12 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：0.7.2
+
++ 1、采用新的注释方式。
++ 2、增加了TypeScript声明文件（jsext.d.ts）
+
+
 ###### version：0.7.1
 
 + 1、进行了优化，避免与原生方法冲突。
