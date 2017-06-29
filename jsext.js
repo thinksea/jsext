@@ -427,49 +427,54 @@ function regExpEscape(str) {
 if (typeof (String.prototype.startsWith) != "function") {
     /**
      * 判断字符串是否以指定的文本为前缀。（为 JavaScript String 对象添加的扩展方法。）
-     * @param {string} s 判定字符串。
-     * @param {boolean} ignoreCase：指示是否忽略大小写，默认值为 false。
-     * @returns {boolean} 返回 true 表示字符串以 s 指定的文本开始，否则返回 false。
+     * @param {string} searchString 要搜索的子字符串。
+     * @param {number} position 在 str 中搜索 searchString 的开始位置，默认值为 0，也就是真正的字符串开头处。
+     * @returns {boolean} 如果匹配成功返回 true；否则返回 false。
      * @example
-     *     var s="abc";
-     *     alert(s.startsWith("C",true));//返回值为 false。
+     * var str = "To be, or not to be, that is the question.";
+     * alert(str.startsWith("To be"));         // true
+     * alert(str.startsWith("not to be"));     // false
+     * alert(str.startsWith("not to be", 10)); // true
      */
-    String.prototype.startsWith = function (s, ignoreCase) {
-        var reg;
-        if (ignoreCase == true) {
-            reg = new RegExp("^" + regExpEscape(s), "gi");
+    String.prototype.startsWith = function (searchString, position) {
+        if (this.length >= searchString.length) {
+            if (position === undefined) {
+                return this.substr(0, searchString.length) == searchString;
+            }
+            else {
+                return this.substr(position, searchString.length) == searchString;
+            }
         }
-        else {
-            reg = new RegExp("^" + regExpEscape(s), "g");
-        }
-        return reg.test(this);
+        return false;
     }
 }
 
 if (typeof (String.prototype.endsWith) != "function") {
     /**
      * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
-     * @param {string} s 判定字符串。
-     * @param {boolean} ignoreCase：指示是否忽略大小写，默认值为 false。
-     * @returns {boolean} 返回 true 表示字符串以 s 指定的文本结尾，否则返回 false。
+     * @param {string} searchString 要搜索的子字符串。
+     * @param {number} position 在 str 中搜索 searchString 的结束位置，默认值为 str.length，也就是真正的字符串结尾处。
+     * @returns {boolean} 如果匹配成功返回 true；否则返回 false。
      * @example
-     *     var s="abc";
-     *     alert(s.endsWith("c"));//返回值为 true。
+     * var str = "To be, or not to be, that is the question.";
+     * alert( str.endsWith("question.") );  // true
+     * alert( str.endsWith("to be") );      // false
+     * alert( str.endsWith("to be", 19) );  // true
+     * alert( str.endsWith("To be", 5) );   // true
      */
-    String.prototype.endsWith = function (s, ignoreCase) {
-        var reg;
-        if (ignoreCase == true) {
-            reg = new RegExp(regExpEscape(s) + "$", "gi");
+    String.prototype.endsWith = function (searchString, position) {
+        if (this.length >= searchString.length) {
+            if (position === undefined) {
+                return this.substr(this.length - searchString.length) == searchString;
+            }
+            else {
+                return this.substr(position - searchString.length, searchString.length) == searchString;
+            }
         }
-        else {
-            reg = new RegExp(regExpEscape(s) + "$", "g");
-        }
-        return reg.test(this);
+        return false;
     }
 }
 
-
-if (typeof (String.prototype.trim) != "function") {
     /**
      * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
      * @param {Array|null} trimChars 要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
@@ -510,7 +515,6 @@ if (typeof (String.prototype.trim) != "function") {
             return str.replace(rg, '');
         }
     }
-}
 
 
 if (typeof (String.prototype.trimStart) != "function") {
