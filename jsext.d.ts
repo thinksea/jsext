@@ -1,6 +1,6 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.0.3
+version：1.0.4
 last change：2017-6-30
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
@@ -276,7 +276,7 @@ interface String {
      * alert(str.startsWith("not to be"));     // false
      * alert(str.startsWith("not to be", 10)); // true
      */
-    startsWith(searchString: string, position: number): boolean;
+    startsWith(searchString: string, position?: number): boolean;
 
     /**
      * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
@@ -290,7 +290,7 @@ interface String {
      * alert( str.endsWith("to be", 19) );  // true
      * alert( str.endsWith("To be", 5) );   // true
      */
-    endsWith(searchString: string, position: number): boolean;
+    endsWith(searchString: string, position?: number): boolean;
 
     /**
      * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
