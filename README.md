@@ -1,6 +1,7 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+=======
 ###### version：1.0.5
 
 修复方法“getUriProtocolAndDomain”的注释错误。请注意，方法的返回值无左下划线“/”后缀。
@@ -22,7 +23,6 @@ alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回�
 + 1、采用新的注释方式。
 + 2、增加了TypeScript声明文件（jsext.d.ts）
 
-=======
 ###### version：1.0.1
 
 + 1、修改下列方法，使其与浏览器标准方法声明相同。支持低版本浏览器。（注意：已经更改方法声明，请仔细核对您使用这两个方法的代码。）
