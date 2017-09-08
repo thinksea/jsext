@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.0.4
-last change：2017-6-30
+version：1.0.5
+last change：2017-9-8
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -731,9 +731,10 @@ if (typeof (String.prototype.clearUriParameter) != "function") {
 if (typeof (String.prototype.getUriProtocolAndDomain) != "function") {
     /**
      * 获取指定的 URI 的协议和域名部分。
-     * @returns {string} 找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
+     * @returns {string} 找不到返回空字符串 “”，否则返回找到的值。
      * @example
-     *     alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
+     *     alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com
+     *     alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com:8080
      */
     String.prototype.getUriProtocolAndDomain = function () {
         /// <summary>
@@ -741,7 +742,7 @@ if (typeof (String.prototype.getUriProtocolAndDomain) != "function") {
         /// </summary>
         /// <param name="uri" type="String">一个 uri 字符串。</param>
         /// <returns type="String">
-        /// 找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
+        /// 找不到返回空字符串 “”，否则返回找到的值。
         /// </returns>
         var uri = this;
         var reg = /^[^\/\\]+:\/\/([^\/]+)/gi;

@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.0.4
-last change：2017-6-30
+version：1.0.5
+last change：2017-9-8
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -374,9 +374,10 @@ interface String {
 
     /**
      * 获取指定的 URI 的协议和域名部分。
-     * @returns 找不到返回空字符串 “”，否则返回找到的值,并且以左下划线“/”为后缀。
+     * @returns 找不到返回空字符串 “”，否则返回找到的值。
      * @example
-     *     alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
+     *     alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com
+     *     alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com:8080
      */
     getUriProtocolAndDomain(): string;
 

@@ -1,6 +1,16 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：1.0.5
+
+修复方法“getUriProtocolAndDomain”的注释错误。请注意，方法的返回值无左下划线“/”后缀。
+
+示例：
+```javascript
+alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com
+alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com:8080
+```
+
 ###### version：1.0.4
 
 修复（jsext.d.ts）中的下列方法声明：
@@ -234,7 +244,8 @@ alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
 获取指定的 URI 的协议和域名部分。
 
 ```javascript
-alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com/。
+alert("http://www.thinksea.com/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com
+alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com:8080
 ```
 
 # String.prototype.getUriPath
