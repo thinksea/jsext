@@ -1,6 +1,12 @@
 # jsext
 对 JavaScript 原生功能进行最小扩展
 
+###### version：1.0.4
+
+修复（jsext.d.ts）中的下列方法声明：
++ 1、startsWith(searchString: string, position?: number): boolean;
++ 2、endsWith(searchString: string, position?: number): boolean;
+
 ###### version：1.0.3
 
 + 1、采用新的注释方式。
