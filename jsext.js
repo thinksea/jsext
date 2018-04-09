@@ -706,7 +706,7 @@ var UriExtTool = /** @class */ (function () {
         if (this.path != null) {
             sb += this.path;
         }
-        if (this.query != null) {
+        if (this.query != null && this.query.length > 0) {
             sb += '?';
             for (var i = 0; i < this.query.length; i++) {
                 var item = this.query[i];

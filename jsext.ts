@@ -731,7 +731,7 @@ class UriExtTool {
         if (this.path != null) {
             sb += this.path;
         }
-        if (this.query != null) {
+        if (this.query != null && this.query.length > 0) {
             sb += '?';
             for (let i: GLint = 0; i < this.query.length; i++) {
                 let item: UriExtTool.QueryItem = this.query[i];
