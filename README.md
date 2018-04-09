@@ -2,6 +2,21 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.0.6
+
+* String.prototype.getUriParameter
+* String.prototype.setUriParameter
+* String.prototype.removeUriParameter
+* String.prototype.clearUriParameter
+
+上述 URL 参数处理方法支持页面内部定位标记（井号后的内容）
+
+示例：
+```javascript
+alert("http://www.thinksea.com/a.htm#mark1".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com
+alert("http://www.thinksea.com:8080/a.htm#mark2".getUriProtocolAndDomain());//返回值为 http://www.thinksea.com:8080
+```
+
 ###### version：1.0.5
 
 修复方法“getUriProtocolAndDomain”的注释错误。请注意，方法的返回值无左下划线“/”后缀。

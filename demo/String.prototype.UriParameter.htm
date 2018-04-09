@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="../jsext.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        var maxCount = 1000000;
+
+        function getParam(url, name)
+        {
+            var value = url.getUriParameter(name);
+            if (value == null) {
+                document.writeln(htmlEncode("< @" + name + " > **null**") + "<br />");
+            }
+            else {
+                document.writeln(htmlEncode("< @" + name + " > " + value) + "<br />");
+            }
+        }
+        function setParam(url, name, value)
+        {
+            url = url.setUriParameter(name, value);
+            document.writeln(htmlEncode("< +" + name + " > " + url) + "<br />");
+            return url;
+        }
+        function removeParam(url, name)
+        {
+            url = url.removeUriParameter(name);
+            document.writeln(htmlEncode("< -" + name + " > " + url) + "<br />");
+            return url;
+        }
+
+        function clearParam(url)
+        {
+            url = url.clearUriParameter(true);
+            document.writeln(htmlEncode("< -* > " + url) + "<br />");
+            return url;
+        }
+
+        function call() {
+            document.writeln(htmlEncode("正在进行功能测试……指令说明{@提取参数的值，+增加参数，-删除参数，-*删除全部参数}") + "<br />");
+            var begin = new Date();
+
+            //string url = "http://www.thinksea.com/";
+            var url = "http://www.thinksea.com/default.aspx?p3=#mark1";
+            //string url = "http://www.thinksea.com/default.aspx?p3#mark1#mark2";
+            //string url = "#mark1#mark2";
+            //string url = "?#mark1#mark2";
+            //string url = "?";
+            //string url = "";
+            document.writeln(htmlEncode(url) + "<br />");
+
+            url = setParam(url, "p1", "value1");
+            url = setParam(url, "p2", "value2");
+            url = setParam(url, "p3", null);
+            url = setParam(url, "p3", "value3");
+            url = setParam(url, "p4", "https://www.163.com/show.aspx?id=1&p=zzl&林夕#mark3");
+            url = setParam(url, "p5", null);
+
+            getParam(url, "P1");
+            getParam(url, "p2");
+            getParam(url, "p3");
+            getParam(url, "p4");
+            getParam(url, "p5");
+            getParam(url, "noparam");
+
+            url = removeParam(url, "p1");
+            url = removeParam(url, "p4");
+            url = removeParam(url, "p5");
+            url = removeParam(url, "noparam");
+
+            url = clearParam(url);
+
+            var end = new Date();
+            var timespan = parseInt(end - begin) / 1000;
+            document.writeln(htmlEncode("------------------执行时间：" + timespan + " 秒") + "<br />");
+        }
+
+        function test()
+        {
+            document.writeln(htmlEncode("正在进行效率测试……") + "<br />");
+            var begin = new Date();
+
+            for (var i = 0; i < maxCount; i++)
+            {
+                //string url = "http://www.thinksea.com/";
+                var url = "http://www.thinksea.com/default.aspx?p3#mark1#mark2";
+
+                url = url.setUriParameter("p1", "value1");
+                url = url.setUriParameter("p2", "value2");
+                url = url.setUriParameter("p3", "");
+                url = url.setUriParameter("r", "https://www.163.com/show.aspx?id=1&p=zzl&林夕#mark3");
+                url = url.removeUriParameter("noparam");
+
+                url.getUriParameter("p1");
+                url.getUriParameter("p2");
+                url.getUriParameter("p3");
+                url.getUriParameter("r");
+                url.getUriParameter("noparam");
+
+                url = url.removeUriParameter("p1");
+                url = url.removeUriParameter("r");
+
+                url = url.clearUriParameter(true);
+
+            }
+            var end = new Date();
+            var timespan = parseInt(end - begin) / 1000;
+            document.writeln(htmlEncode("------------------测试 " + maxCount + " 次，耗费时间 " + timespan + " 秒，平均每秒 " + (maxCount / timespan) + " 次") + "<br />");
+        }
+
+        function Main()
+        {
+            document.writeln(htmlEncode("说明：本程序仅对 URI 参数处理方法进行功能和效率测试") + "<br />");
+
+            call();
+
+            //test();
+
+            document.writeln(htmlEncode("全部完成") + "<br />");
+        }
+
+        Main();
+    </script>
+</head>
+<body>
+</body>
+</html>
