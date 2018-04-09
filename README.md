@@ -2,6 +2,10 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.0.7
+
+修复方法 removeUriParameter，删除最后一个参数后不保留问号“?”。
+
 ###### version：1.0.6
 
 * String.prototype.getUriParameter
