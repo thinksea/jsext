@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.0.5
-last change：2017-9-8
+version：1.0.8
+last change：2018-7-26
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -462,3 +462,18 @@ declare function htmlEncode(str: string): string;
  * @returns 解码后的 HTML 文本。
  */
 declare function htmlDecode(str: string): string;
+
+/**
+ * 判断用户端访问环境是否移动电话浏览器。
+ * @returns 如果是移动电话则返回 true；否则返回 false。
+ * @see  http://detectmobilebrowsers.com/ 以此站点提供的解决方案为基础进行了修改。
+ */
+declare function isMobile(): boolean;
+
+/**
+ * 判断用户端访问环境是否移动电话或平板浏览器。
+ * @returns 如果是则返回 true；否则返回 false。
+ * @see http://detectmobilebrowsers.com/ 以此站点提供的解决方案为基础进行了修改。
+ * 注意：此方法存在一个已知的BUG，无法得知如何识别微软的 surface 平板设备。
+ */
+declare function isMobileOrPad(): boolean;

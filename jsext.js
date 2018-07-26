@@ -1,7 +1,7 @@
 /*
 对 JavaScript 原生功能进行最小扩展。
-version：1.0.7
-last change：2018-4-9
+version：1.0.8
+last change：2018-7-26
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -37,7 +37,7 @@ if (typeof (Number.prototype.format) != "function") {
         //if (num === undefined) return undefined;
         //if (num == null) return null;
         //if (num == "") return "";
-        if (num != undefined && num != null && pattern) {
+        if (num != undefined && num != null && pattern) { //对小数点后数字做四舍五入。
             var lio = pattern.lastIndexOf(".");
             if (lio != -1) {
                 var How = pattern.length - lio - 1;
@@ -472,12 +472,12 @@ if (typeof (String.prototype.trim) != "function") {
      *     alert("aaabccdeaabaaa".trim('a', 'b')) //输出“ccde”
      */
     String.prototype.trim = function (trimChars) {
-        if (typeof (trimChars) == "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) {
+        if (typeof (trimChars) == "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/^\s*/, '').replace(/\s*$/, '');
         }
         else {
             var sReg = "";
-            if (trimChars instanceof Array && trimChars.length > 0) {
+            if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
                 for (var i = 0; i < trimChars.length; i++) {
                     if (sReg.length > 0) {
                         sReg += "|";
@@ -485,7 +485,7 @@ if (typeof (String.prototype.trim) != "function") {
                     sReg += regExpEscape(trimChars[i]);
                 }
             }
-            else {
+            else { //处理单个字符参数指定排除字符的情况。
                 sReg = regExpEscape(trimChars);
                 if (arguments.length > 1) {
                     for (var i = 1; i < arguments.length; i++) {
@@ -514,12 +514,12 @@ if (typeof (String.prototype.trimStart) != "function") {
      *     alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
      */
     String.prototype.trimStart = function (trimChars) {
-        if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) {
+        if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/^\s*/, '');
         }
         else {
             var sReg = "";
-            if (trimChars instanceof Array && trimChars.length > 0) {
+            if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
                 for (var i = 0; i < trimChars.length; i++) {
                     if (sReg.length > 0) {
                         sReg += "|";
@@ -527,7 +527,7 @@ if (typeof (String.prototype.trimStart) != "function") {
                     sReg += regExpEscape(trimChars[i]);
                 }
             }
-            else {
+            else { //处理单个字符参数指定排除字符的情况。
                 sReg = regExpEscape(trimChars);
                 if (arguments.length > 1) {
                     for (var i = 1; i < arguments.length; i++) {
@@ -554,12 +554,12 @@ if (typeof (String.prototype.trimEnd) != "function") {
      *     alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
      */
     String.prototype.trimEnd = function (trimChars) {
-        if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) {
+        if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
             return this.replace(/\s*$/, '');
         }
         else {
             var sReg = "";
-            if (trimChars instanceof Array && trimChars.length > 0) {
+            if (trimChars instanceof Array && trimChars.length > 0) { //处理单个数组参数指定排除字符的情况。
                 for (var i = 0; i < trimChars.length; i++) {
                     if (sReg.length > 0) {
                         sReg += "|";
@@ -567,7 +567,7 @@ if (typeof (String.prototype.trimEnd) != "function") {
                     sReg += regExpEscape(trimChars[i]);
                 }
             }
-            else {
+            else { //处理单个字符参数指定排除字符的情况。
                 sReg = regExpEscape(trimChars);
                 if (arguments.length > 1) {
                     for (var i = 1; i < arguments.length; i++) {
@@ -1115,4 +1115,52 @@ function htmlDecode(str) {
         return null;
     return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }
+//#region 检测移动设备浏览器。
+/**
+ * 判断用户端访问环境是否移动电话浏览器。
+ * @returns 如果是移动电话则返回 true；否则返回 false。
+ * @see  http://detectmobilebrowsers.com/ 以此站点提供的解决方案为基础进行了修改。
+ */
+function isMobile() {
+    if (isMobile._isMobile === null) {
+        var a = navigator.userAgent || navigator.vendor || window.opera;
+        if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) {
+            if (/MI PAD/i.test(a)) { //过滤掉小米PAD
+                isMobile._isMobile = false;
+            }
+            else {
+                isMobile._isMobile = true;
+            }
+        }
+        else {
+            isMobile._isMobile = false;
+        }
+    }
+    return isMobile._isMobile;
+}
+(function (isMobile) {
+    isMobile._isMobile = null; //用于缓冲结果，避免冗余计算过程。
+})(isMobile || (isMobile = {}));
+/**
+ * 判断用户端访问环境是否移动电话或平板浏览器。
+ * @returns 如果是则返回 true；否则返回 false。
+ * @see http://detectmobilebrowsers.com/ 以此站点提供的解决方案为基础进行了修改。
+ * 注意：此方法存在一个已知的BUG，无法得知如何识别微软的 surface 平板设备。
+ */
+function isMobileOrPad() {
+    if (isMobileOrPad._isMobile === null) {
+        var a = navigator.userAgent || navigator.vendor || window.opera;
+        if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|MI PAD|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) {
+            isMobileOrPad._isMobile = true;
+        }
+        else {
+            isMobileOrPad._isMobile = false;
+        }
+    }
+    return isMobileOrPad._isMobile;
+}
+(function (isMobileOrPad) {
+    isMobileOrPad._isMobile = null; //用于缓冲结果，避免冗余计算过程。
+})(isMobileOrPad || (isMobileOrPad = {}));
+//#endregion
 //# sourceMappingURL=jsext.js.map

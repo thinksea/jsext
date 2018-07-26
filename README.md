@@ -2,6 +2,11 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.0.8
+
++ 1、isMobile(): boolean 判断用户端访问环境是否移动电话浏览器。
++ 2、isMobileOrPad(): boolean 判断用户端访问环境是否移动电话或平板浏览器。
+
 ###### version：1.0.7
 
 修复方法 removeUriParameter，删除最后一个参数后不保留问号“?”。
