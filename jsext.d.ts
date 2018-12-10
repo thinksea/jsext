@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
 version：1.0.9
-last change：2018-7-26
+last change：2018-12-10
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
