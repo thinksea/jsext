@@ -2,6 +2,11 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.0.9
+
++ 1、isWeixinBrowser(): boolean 判断是否在微信浏览器内访问网页。
+
+=======
 ###### version：1.0.8
 
 + 1、isMobile(): boolean 判断用户端访问环境是否移动电话浏览器。

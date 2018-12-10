@@ -1216,3 +1216,15 @@ namespace isMobileOrPad {
 }
 
 //#endregion
+
+/**
+ * 判断是否在微信浏览器内访问网页。
+ * @returns 如果是则返回 true；否则返回 false。
+ */
+function isWeixinBrowser(): boolean {
+    if (/MicroMessenger/i.test(window.navigator.userAgent)) {
+        return true;
+    } else {
+        return false;
+    }
+}

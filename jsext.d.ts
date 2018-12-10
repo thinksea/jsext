@@ -477,3 +477,9 @@ declare function isMobile(): boolean;
  * 注意：此方法存在一个已知的BUG，无法得知如何识别微软的 surface 平板设备。
  */
 declare function isMobileOrPad(): boolean;
+
+/**
+ * 判断是否在微信浏览器内访问网页。
+ * @returns 如果是则返回 true；否则返回 false。
+ */
+declare function isWeixinBrowser(): boolean;

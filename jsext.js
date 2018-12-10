@@ -1163,4 +1163,16 @@ function isMobileOrPad() {
     isMobileOrPad._isMobile = null; //用于缓冲结果，避免冗余计算过程。
 })(isMobileOrPad || (isMobileOrPad = {}));
 //#endregion
+/**
+ * 判断是否在微信浏览器内访问网页。
+ * @returns 如果是则返回 true；否则返回 false。
+ */
+function isWeixinBrowser() {
+    if (/MicroMessenger/i.test(window.navigator.userAgent)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 //# sourceMappingURL=jsext.js.map
