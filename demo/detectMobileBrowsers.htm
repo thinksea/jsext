@@ -6,19 +6,21 @@
     <script type="text/javascript" src="../jsext.min.js" charset="utf-8"></script>
     <script type="text/javascript">
         if (isMobile()) {
-            document.write('检测到移动电话浏览器');
-            document.write("<br/>");
+            document.writeln('isMobile() -> 检测到移动电话浏览器');
         }
         else {
-            document.write('不是移动电话浏览器');
-            document.write("<br/>");
+            document.writeln('isMobile() ->不是移动电话浏览器');
         }
+        document.writeln("<br/>");
         if (isMobileOrPad()) {
-            document.write('检测到移动电话或 PAD 浏览器');
+            document.writeln('isMobileOrPad() ->检测到移动电话或 PAD 浏览器');
         }
         else {
-            document.write('不是移动电话或 PAD 浏览器');
+            document.writeln('isMobileOrPad() ->不是移动电话或 PAD 浏览器');
         }
+        document.writeln("<br/>");
+        var a = navigator.userAgent || navigator.vendor || window.opera;
+        document.writeln('userAgent -> ' + a);
     </script>
 </head>
 <body>
