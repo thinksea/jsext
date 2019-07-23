@@ -2,6 +2,10 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.2.0
+
+修改方法“isMobileOrPad()”对设备的识别方式。
+
 ###### version：1.0.9
 
 + 1、isWeixinBrowser(): boolean 判断是否在微信浏览器内访问网页。
