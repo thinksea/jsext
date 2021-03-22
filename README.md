@@ -2,6 +2,13 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.3.0
+
+修复下列方法的 BUG：
++ String.prototype.trim
++ String.prototype.trimStart
++ String.prototype.trimEnd
+
 ###### version：1.2.0
 
 修改方法“isMobileOrPad()”对设备的识别方式。
