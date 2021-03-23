@@ -1,251 +1,227 @@
 /*
 对 JavaScript 原生功能进行最小扩展。
-version：1.3.0
+version：1.5.0
 last change：2021-3-23
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
-if (typeof (Number.prototype.format) != "function") {
-    Number.prototype.format = function (pattern) {
-        if (!pattern)
-            return this.toString();
-        var num = this;
-        //if (num === undefined) return undefined;
-        //if (num == null) return null;
-        //if (num == "") return "";
-        if (num != undefined && num != null && pattern) { //对小数点后数字做四舍五入。
-            var lio = pattern.lastIndexOf(".");
-            if (lio != -1) {
-                var How = pattern.length - lio - 1;
-                num = Math.round(num * Math.pow(10, How)) / Math.pow(10, How);
-            }
+Number.prototype.format = function (pattern) {
+    if (!pattern)
+        return this.toString();
+    var num = this;
+    //if (num === undefined) return undefined;
+    //if (num == null) return null;
+    //if (num == "") return "";
+    if (num != undefined && num != null && pattern) { //对小数点后数字做四舍五入。
+        var lio = pattern.lastIndexOf(".");
+        if (lio != -1) {
+            var How = pattern.length - lio - 1;
+            num = Math.round(num * Math.pow(10, How)) / Math.pow(10, How);
         }
-        var strarr = num ? num.toString().split('.') : ['0'];
-        var fmtarr = pattern ? pattern.split('.') : [''];
-        var retstr = '';
-        // 整数部分  
-        var str = strarr[0];
-        var fmt = fmtarr[0];
-        var i = str.length - 1;
-        var comma = false;
-        for (var f = fmt.length - 1; f >= 0; f--) {
-            switch (fmt.substr(f, 1)) {
-                case '#':
-                    if (i >= 0)
-                        retstr = str.substr(i--, 1) + retstr;
-                    break;
-                case '0':
-                    if (i >= 0)
-                        retstr = str.substr(i--, 1) + retstr;
-                    else
-                        retstr = '0' + retstr;
-                    break;
-                case ',':
-                    comma = true;
+    }
+    var strarr = num ? num.toString().split('.') : ['0'];
+    var fmtarr = pattern ? pattern.split('.') : [''];
+    var retstr = '';
+    // 整数部分  
+    var str = strarr[0];
+    var fmt = fmtarr[0];
+    var i = str.length - 1;
+    var comma = false;
+    for (var f = fmt.length - 1; f >= 0; f--) {
+        switch (fmt.substr(f, 1)) {
+            case '#':
+                if (i >= 0)
+                    retstr = str.substr(i--, 1) + retstr;
+                break;
+            case '0':
+                if (i >= 0)
+                    retstr = str.substr(i--, 1) + retstr;
+                else
+                    retstr = '0' + retstr;
+                break;
+            case ',':
+                comma = true;
+                retstr = ',' + retstr;
+                break;
+        }
+    }
+    if (i >= 0) {
+        if (comma) {
+            var l = str.length;
+            for (; i >= 0; i--) {
+                retstr = str.substr(i, 1) + retstr;
+                if (i > 0 && ((l - i) % 3) == 0)
                     retstr = ',' + retstr;
-                    break;
             }
         }
-        if (i >= 0) {
-            if (comma) {
-                var l = str.length;
-                for (; i >= 0; i--) {
-                    retstr = str.substr(i, 1) + retstr;
-                    if (i > 0 && ((l - i) % 3) == 0)
-                        retstr = ',' + retstr;
+        else
+            retstr = str.substr(0, i + 1) + retstr;
+    }
+    retstr = retstr + '.';
+    // 处理小数部分  
+    str = strarr.length > 1 ? strarr[1] : '';
+    fmt = fmtarr.length > 1 ? fmtarr[1] : '';
+    i = 0;
+    for (var f = 0; f < fmt.length; f++) {
+        switch (fmt.substr(f, 1)) {
+            case '#':
+                if (i < str.length)
+                    retstr += str.substr(i++, 1);
+                break;
+            case '0':
+                if (i < str.length)
+                    retstr += str.substr(i++, 1);
+                else
+                    retstr += '0';
+                break;
+        }
+    }
+    return retstr.replace(/^,+/, '').replace(/\.$/, '');
+};
+Date.prototype.format = function (pattern, local) {
+    if (!pattern)
+        return this.toString();
+    var time = {};
+    time.Year = this.getFullYear();
+    time.TYear = ("" + time.Year).substr(2);
+    time.Month = this.getMonth() + 1;
+    time.TMonth = time.Month < 10 ? "0" + time.Month : time.Month;
+    time.Day = this.getDate();
+    time.TDay = time.Day < 10 ? "0" + time.Day : time.Day;
+    time.Hour = this.getHours();
+    time.THour = time.Hour < 10 ? "0" + time.Hour : time.Hour;
+    time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
+    time.Thour = time.hour < 10 ? "0" + time.hour : time.hour;
+    time.Minute = this.getMinutes();
+    time.TMinute = time.Minute < 10 ? "0" + time.Minute : time.Minute;
+    time.Second = this.getSeconds();
+    time.TSecond = time.Second < 10 ? "0" + time.Second : time.Second;
+    time.Millisecond = this.getMilliseconds();
+    time.Week = this.getDay();
+    time.AmPm = time.Hour < 13 ? 0 : 1;
+    if (pattern != undefined && pattern.replace(/\s/g, "").length > 0) {
+        var loc = (local ? this.formatLocal[local] : this.formatLocal["en"]);
+        time.regs = {
+            "yyyy": time.Year,
+            "yyy": time.Year,
+            "yy": time.TYear,
+            "y": time.TYear,
+            "MMMM": loc.MonthLong[time.Month - 1],
+            "MMM": loc.Month[time.Month - 1],
+            "MM": time.TMonth,
+            "M": time.Month,
+            "dddd": loc.WeekLong[time.Week],
+            "ddd": loc.Week[time.Week],
+            "dd": time.TDay,
+            "d": time.Day,
+            "HH": time.THour,
+            "H": time.Hour,
+            "hh": time.Thour,
+            "h": time.hour,
+            "mm": time.TMinute,
+            "m": time.Minute,
+            "ss": time.TSecond,
+            "s": time.Second,
+            "fff": (time.Millisecond / 1000).format("0.000").substr(2),
+            "ff": (time.Millisecond / 1000).format("0.00").substr(2),
+            "f": (time.Millisecond / 1000).format("0.0").substr(2),
+            "FFF": (time.Millisecond / 1000).format("0.###").substr(2),
+            "FF": (time.Millisecond / 1000).format("0.##").substr(2),
+            "F": (time.Millisecond / 1000).format("0.#").substr(2),
+            "tt": loc.AMPMLong[time.AmPm],
+            "t": loc.AMPM[time.AmPm]
+        };
+        var result = "";
+        var finded = false;
+        while (pattern.length > 0) {
+            finded = false;
+            for (var keyword in time.regs) {
+                if (pattern.substr(0, keyword.length) == keyword) {
+                    result += time.regs[keyword];
+                    pattern = pattern.substr(keyword.length);
+                    finded = true;
+                    break;
                 }
             }
-            else
-                retstr = str.substr(0, i + 1) + retstr;
-        }
-        retstr = retstr + '.';
-        // 处理小数部分  
-        str = strarr.length > 1 ? strarr[1] : '';
-        fmt = fmtarr.length > 1 ? fmtarr[1] : '';
-        i = 0;
-        for (var f = 0; f < fmt.length; f++) {
-            switch (fmt.substr(f, 1)) {
-                case '#':
-                    if (i < str.length)
-                        retstr += str.substr(i++, 1);
-                    break;
-                case '0':
-                    if (i < str.length)
-                        retstr += str.substr(i++, 1);
-                    else
-                        retstr += '0';
-                    break;
+            if (!finded) {
+                result += pattern[0];
+                pattern = pattern.substr(1);
             }
         }
-        return retstr.replace(/^,+/, '').replace(/\.$/, '');
-    };
-}
-if (typeof (Date.prototype.format) != "function") {
-    Date.prototype.format = function (pattern, local) {
-        if (!pattern)
-            return this.toString();
-        var time = {};
-        time.Year = this.getFullYear();
-        time.TYear = ("" + time.Year).substr(2);
-        time.Month = this.getMonth() + 1;
-        time.TMonth = time.Month < 10 ? "0" + time.Month : time.Month;
-        time.Day = this.getDate();
-        time.TDay = time.Day < 10 ? "0" + time.Day : time.Day;
-        time.Hour = this.getHours();
-        time.THour = time.Hour < 10 ? "0" + time.Hour : time.Hour;
-        time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
-        time.Thour = time.hour < 10 ? "0" + time.hour : time.hour;
-        time.Minute = this.getMinutes();
-        time.TMinute = time.Minute < 10 ? "0" + time.Minute : time.Minute;
-        time.Second = this.getSeconds();
-        time.TSecond = time.Second < 10 ? "0" + time.Second : time.Second;
-        time.Millisecond = this.getMilliseconds();
-        time.Week = this.getDay();
-        time.AmPm = time.Hour < 13 ? 0 : 1;
-        if (pattern != undefined && pattern.replace(/\s/g, "").length > 0) {
-            var loc = (local ? this.formatLocal[local] : this.formatLocal["en"]);
-            time.regs = {
-                "yyyy": time.Year,
-                "yyy": time.Year,
-                "yy": time.TYear,
-                "y": time.TYear,
-                "MMMM": loc.MonthLong[time.Month - 1],
-                "MMM": loc.Month[time.Month - 1],
-                "MM": time.TMonth,
-                "M": time.Month,
-                "dddd": loc.WeekLong[time.Week],
-                "ddd": loc.Week[time.Week],
-                "dd": time.TDay,
-                "d": time.Day,
-                "HH": time.THour,
-                "H": time.Hour,
-                "hh": time.Thour,
-                "h": time.hour,
-                "mm": time.TMinute,
-                "m": time.Minute,
-                "ss": time.TSecond,
-                "s": time.Second,
-                "fff": (time.Millisecond / 1000).format("0.000").substr(2),
-                "ff": (time.Millisecond / 1000).format("0.00").substr(2),
-                "f": (time.Millisecond / 1000).format("0.0").substr(2),
-                "FFF": (time.Millisecond / 1000).format("0.###").substr(2),
-                "FF": (time.Millisecond / 1000).format("0.##").substr(2),
-                "F": (time.Millisecond / 1000).format("0.#").substr(2),
-                "tt": loc.AMPMLong[time.AmPm],
-                "t": loc.AMPM[time.AmPm]
-            };
-            var result = "";
-            var finded = false;
-            while (pattern.length > 0) {
-                finded = false;
-                for (var keyword in time.regs) {
-                    if (pattern.substr(0, keyword.length) == keyword) {
-                        result += time.regs[keyword];
-                        pattern = pattern.substr(keyword.length);
-                        finded = true;
-                        break;
-                    }
-                }
-                if (!finded) {
-                    result += pattern[0];
-                    pattern = pattern.substr(1);
-                }
-            }
-            return result;
+        return result;
+    }
+    else {
+        pattern = time.Year + "-" + time.Month + "-" + time.Day + " " + time.Hour + ":" + time.Minute + ":" + time.Second;
+        return pattern;
+    }
+};
+Date.prototype.formatLocal = {
+    "en": {
+        Month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        MonthLong: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        Week: ["Sun", "Mon", "Tue", "Web", "Thu", "Fri", "Sat"],
+        WeekLong: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        AMPM: ["A", "P"],
+        AMPMLong: ["AM", "PM"],
+    },
+    "zh_cn": {
+        Month: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        MonthLong: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        Week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        WeekLong: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        AMPM: ["", "午"],
+        AMPMLong: ["", "午后"],
+    }
+};
+Date.prototype.addMilliseconds = function (value) {
+    var date = this;
+    date.setMilliseconds(date.getMilliseconds() + value);
+    return date;
+};
+Date.prototype.addSeconds = function (value) {
+    var date = this;
+    date.setSeconds(date.getSeconds() + value);
+    return date;
+};
+Date.prototype.addMinutes = function (value) {
+    var date = this;
+    date.setMinutes(date.getMinutes() + value);
+    return date;
+};
+Date.prototype.addHours = function (value) {
+    var date = this;
+    date.setHours(date.getHours() + value);
+    return date;
+};
+Date.prototype.addDays = function (value) {
+    var date = this;
+    date.setDate(date.getDate() + value);
+    return date;
+};
+Date.prototype.addMonths = function (value) {
+    var date = this;
+    date.setMonth(date.getMonth() + value);
+    return date;
+};
+Date.prototype.addYears = function (value) {
+    var date = this;
+    date.setFullYear(date.getFullYear() + value);
+    return date;
+};
+Array.prototype.indexOf = function (p_var) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == p_var) {
+            return (i);
         }
-        else {
-            pattern = time.Year + "-" + time.Month + "-" + time.Day + " " + time.Hour + ":" + time.Minute + ":" + time.Second;
-            return pattern;
-        }
-    };
-}
-if (!Date.prototype.formatLocal) {
-    Date.prototype.formatLocal = {
-        "en": {
-            Month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            MonthLong: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            Week: ["Sun", "Mon", "Tue", "Web", "Thu", "Fri", "Sat"],
-            WeekLong: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            AMPM: ["A", "P"],
-            AMPMLong: ["AM", "PM"],
-        },
-        "zh_cn": {
-            Month: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            MonthLong: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            Week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-            WeekLong: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-            AMPM: ["", "午"],
-            AMPMLong: ["", "午后"],
-        }
-    };
-}
-if (typeof (Date.prototype.addMilliseconds) != "function") {
-    Date.prototype.addMilliseconds = function (value) {
-        var date = this;
-        date.setMilliseconds(date.getMilliseconds() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addSeconds) != "function") {
-    Date.prototype.addSeconds = function (value) {
-        var date = this;
-        date.setSeconds(date.getSeconds() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addMinutes) != "function") {
-    Date.prototype.addMinutes = function (value) {
-        var date = this;
-        date.setMinutes(date.getMinutes() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addHours) != "function") {
-    Date.prototype.addHours = function (value) {
-        var date = this;
-        date.setHours(date.getHours() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addDays) != "function") {
-    Date.prototype.addDays = function (value) {
-        var date = this;
-        date.setDate(date.getDate() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addMonths) != "function") {
-    Date.prototype.addMonths = function (value) {
-        var date = this;
-        date.setMonth(date.getMonth() + value);
-        return date;
-    };
-}
-if (typeof (Date.prototype.addYears) != "function") {
-    Date.prototype.addYears = function (value) {
-        var date = this;
-        date.setFullYear(date.getFullYear() + value);
-        return date;
-    };
-}
-if (typeof (Array.prototype.indexOf) != "function") {
-    Array.prototype.indexOf = function (p_var) {
-        for (var i = 0; i < this.length; i++) {
-            if (this[i] == p_var) {
-                return (i);
-            }
-        }
-        return (-1);
-    };
-}
-if (typeof (Array.prototype.remove) != "function") {
-    Array.prototype.remove = function (o) {
-        var i = this.indexOf(o);
-        if (i > -1)
-            this.splice(i, 1);
-        return (i > -1);
-    };
-}
+    }
+    return (-1);
+};
+Array.prototype.remove = function (o) {
+    var i = this.indexOf(o);
+    if (i > -1)
+        this.splice(i, 1);
+    return (i > -1);
+};
 /**
 * 通过替换为转义码来转义最小的元字符集（\、*、+、?、|、{、[、(、)、^、$、.、# 和空白）。（为 JavaScript RegExp 对象添加的扩展方法。）
      * @param str 一个可能包含正则表达式元字符的字符串。
@@ -269,33 +245,28 @@ function regExpEscape(str) {
         .replace(/\./gi, "\\.")
         .replace(/\#/gi, "\\#");
 }
-if (typeof (String.prototype.startsWith) != "function") {
-    String.prototype.startsWith = function (searchString, position) {
-        if (this.length >= searchString.length) {
-            if (position === undefined) {
-                return this.substr(0, searchString.length) == searchString;
-            }
-            else {
-                return this.substr(position, searchString.length) == searchString;
-            }
+String.prototype.startsWith = function (searchString, position) {
+    if (this.length >= searchString.length) {
+        if (position === undefined) {
+            return this.substr(0, searchString.length) == searchString;
         }
-        return false;
-    };
-}
-if (typeof (String.prototype.endsWith) != "function") {
-    String.prototype.endsWith = function (searchString, position) {
-        if (this.length >= searchString.length) {
-            if (position === undefined) {
-                return this.substr(this.length - searchString.length) == searchString;
-            }
-            else {
-                return this.substr(position - searchString.length, searchString.length) == searchString;
-            }
+        else {
+            return this.substr(position, searchString.length) == searchString;
         }
-        return false;
-    };
-}
-//if (typeof (String.prototype.trim) != "function") {
+    }
+    return false;
+};
+String.prototype.endsWith = function (searchString, position) {
+    if (this.length >= searchString.length) {
+        if (position === undefined) {
+            return this.substr(this.length - searchString.length) == searchString;
+        }
+        else {
+            return this.substr(position - searchString.length, searchString.length) == searchString;
+        }
+    }
+    return false;
+};
 String.prototype.trim = function (trimChars) {
     if (typeof (trimChars) == "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '').replace(/\s*$/, '');
@@ -327,8 +298,6 @@ String.prototype.trim = function (trimChars) {
         return str.replace(rg, '');
     }
 };
-//}
-//if (typeof (String.prototype.trimStart) != "function") {
 String.prototype.trimStart = function (trimChars) {
     if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '');
@@ -358,8 +327,6 @@ String.prototype.trimStart = function (trimChars) {
         return this.replace(rg, '');
     }
 };
-//}
-//if (typeof (String.prototype.trimEnd) != "function") {
 String.prototype.trimEnd = function (trimChars) {
     if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/\s*$/, '');
@@ -389,36 +356,31 @@ String.prototype.trimEnd = function (trimChars) {
         return this.replace(rg, '');
     }
 };
-//}
-if (typeof (String.prototype.getFileName) != "function") {
-    String.prototype.getFileName = function () {
-        var right = this.lastIndexOf("?");
-        if (right == -1) {
-            right = this.length;
-        }
-        var left = this.lastIndexOf("\\", right - 1);
-        if (left == -1) {
-            left = this.lastIndexOf("/", right - 1);
-        }
-        if (left == -1) {
-            left = 0;
-        }
-        else {
-            left++;
-        }
-        return this.substring(left, right);
-    };
-}
-if (typeof (String.prototype.getExtensionName) != "function") {
-    String.prototype.getExtensionName = function () {
-        var fileName = this.getFileName();
-        var dot = fileName.lastIndexOf(".");
-        if (dot == -1) {
-            return "";
-        }
-        return fileName.substr(dot);
-    };
-}
+String.prototype.getFileName = function () {
+    var right = this.lastIndexOf("?");
+    if (right == -1) {
+        right = this.length;
+    }
+    var left = this.lastIndexOf("\\", right - 1);
+    if (left == -1) {
+        left = this.lastIndexOf("/", right - 1);
+    }
+    if (left == -1) {
+        left = 0;
+    }
+    else {
+        left++;
+    }
+    return this.substring(left, right);
+};
+String.prototype.getExtensionName = function () {
+    var fileName = this.getFileName();
+    var dot = fileName.lastIndexOf(".");
+    if (dot == -1) {
+        return "";
+    }
+    return fileName.substr(dot);
+};
 //#region  URI 参数处理。
 /**
  * 封装了 URI 扩展处理功能。（***此对象仅供内部代码使用，请勿引用。）
@@ -617,181 +579,161 @@ var UriExtTool = /** @class */ (function () {
     UriExtTool.QueryItem = QueryItem;
 })(UriExtTool || (UriExtTool = {}));
 //#endregion
-if (typeof (String.prototype.getUriParameter) != "function") {
-    String.prototype.getUriParameter = function (name) {
-        var r = UriExtTool.Create(this);
-        return r.getUriParameter(name);
-    };
-}
-if (typeof (String.prototype.setUriParameter) != "function") {
-    String.prototype.setUriParameter = function (name, value) {
-        var r = UriExtTool.Create(this);
-        r.setUriParameter(name, value);
-        return r.toString();
-    };
-}
-if (typeof (String.prototype.removeUriParameter) != "function") {
-    String.prototype.removeUriParameter = function (name) {
-        var r = UriExtTool.Create(this);
-        r.removeUriParameter(name);
-        return r.toString();
-    };
-}
-if (typeof (String.prototype.clearUriParameter) != "function") {
-    String.prototype.clearUriParameter = function (retainSharp) {
-        var r = UriExtTool.Create(this);
-        r.clearUriParameter(typeof (retainSharp) == "undefined" ? false : retainSharp);
-        return r.toString();
-    };
-}
-if (typeof (String.prototype.getUriProtocolAndDomain) != "function") {
-    String.prototype.getUriProtocolAndDomain = function () {
-        /// <summary>
-        /// 获取指定的 URI 的协议和域名部分。
-        /// </summary>
-        /// <param name="uri" type="String">一个 uri 字符串。</param>
-        /// <returns type="String">
-        /// 找不到返回空字符串 “”，否则返回找到的值。
-        /// </returns>
-        var uri = this;
-        var reg = /^[^\/\\]+:\/\/([^\/]+)/gi;
-        var m = uri.match(reg);
-        if (m) {
-            return m[0];
+String.prototype.getUriParameter = function (name) {
+    var r = UriExtTool.Create(this);
+    return r.getUriParameter(name);
+};
+String.prototype.setUriParameter = function (name, value) {
+    var r = UriExtTool.Create(this);
+    r.setUriParameter(name, value);
+    return r.toString();
+};
+String.prototype.removeUriParameter = function (name) {
+    var r = UriExtTool.Create(this);
+    r.removeUriParameter(name);
+    return r.toString();
+};
+String.prototype.clearUriParameter = function (retainSharp) {
+    var r = UriExtTool.Create(this);
+    r.clearUriParameter(typeof (retainSharp) == "undefined" ? false : retainSharp);
+    return r.toString();
+};
+String.prototype.getUriProtocolAndDomain = function () {
+    /// <summary>
+    /// 获取指定的 URI 的协议和域名部分。
+    /// </summary>
+    /// <param name="uri" type="String">一个 uri 字符串。</param>
+    /// <returns type="String">
+    /// 找不到返回空字符串 “”，否则返回找到的值。
+    /// </returns>
+    var uri = this;
+    var reg = /^[^\/\\]+:\/\/([^\/]+)/gi;
+    var m = uri.match(reg);
+    if (m) {
+        return m[0];
+    }
+    return "";
+};
+String.prototype.getUriPath = function () {
+    var uri = this;
+    if (uri == undefined || uri == null || uri == "") {
+        return null;
+    }
+    var path = uri.clearUriParameter();
+    var filename = path.replace(/^[^\/\\]+:\/\/(([^\/]+$)|([^\/]+\/+)*)/gi, "");
+    if (filename != "" && /\./gi.test(filename)) {
+        path = path.substring(0, path.length - filename.length);
+    }
+    var regEndsWith = /\/$/gi;
+    if (regEndsWith.test(path)) {
+        return path;
+    }
+    else {
+        return path + "/";
+    }
+};
+String.prototype.combineUri = function (uri2) {
+    var uri1 = this;
+    if (uri1 == "")
+        return uri2;
+    if (uri2 == "")
+        return uri1;
+    if (uri2.indexOf("://") >= 0) {
+        return uri2;
+    }
+    var regStartsWith = /^\//gi;
+    var regEndsWith = /\/$/gi;
+    if (regStartsWith.test(uri2)) {
+        return uri1.getUriProtocolAndDomain() + uri2;
+    }
+    if (regEndsWith.test(uri1)) {
+        return uri1 + uri2;
+    }
+    else {
+        return uri1 + "/" + uri2;
+    }
+};
+String.prototype.getFullUri = function () {
+    var uri = this;
+    var domain = uri.getUriProtocolAndDomain();
+    var reg = /^\//gi;
+    if (domain == "" && !reg.test(uri)) {
+        return uri;
+    }
+    var r = uri.substring(domain.length, uri.length);
+    var reg1 = /(^\/(\.\.\/)+)/gi;
+    var reg2 = /(\/[^\/.]+\/..\/)/gi;
+    var last = r;
+    do {
+        r = r.replace(reg1, "/");
+        r = r.replace(reg2, "/");
+        if (r.length == last.length) {
+            break;
         }
-        return "";
-    };
-}
-if (typeof (String.prototype.getUriPath) != "function") {
-    String.prototype.getUriPath = function () {
-        var uri = this;
-        if (uri == undefined || uri == null || uri == "") {
-            return null;
+        last = r;
+    } while (true);
+    return domain.combineUri(r);
+};
+String.prototype.toColorHex = function () {
+    var that = this;
+    var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
+    if (/^(rgb|RGB)/.test(that) || that.split(",").length == 3) {
+        var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+        if (aColor.length == 0 || (aColor.length == 1 && aColor[0].length == 0)) {
+            return "";
         }
-        var path = uri.clearUriParameter();
-        var filename = path.replace(/^[^\/\\]+:\/\/(([^\/]+$)|([^\/]+\/+)*)/gi, "");
-        if (filename != "" && /\./gi.test(filename)) {
-            path = path.substring(0, path.length - filename.length);
-        }
-        var regEndsWith = /\/$/gi;
-        if (regEndsWith.test(path)) {
-            return path;
-        }
-        else {
-            return path + "/";
-        }
-    };
-}
-if (typeof (String.prototype.combineUri) != "function") {
-    String.prototype.combineUri = function (uri2) {
-        var uri1 = this;
-        if (uri1 == "")
-            return uri2;
-        if (uri2 == "")
-            return uri1;
-        if (uri2.indexOf("://") >= 0) {
-            return uri2;
-        }
-        var regStartsWith = /^\//gi;
-        var regEndsWith = /\/$/gi;
-        if (regStartsWith.test(uri2)) {
-            return uri1.getUriProtocolAndDomain() + uri2;
-        }
-        if (regEndsWith.test(uri1)) {
-            return uri1 + uri2;
-        }
-        else {
-            return uri1 + "/" + uri2;
-        }
-    };
-}
-if (typeof (String.prototype.getFullUri) != "function") {
-    String.prototype.getFullUri = function () {
-        var uri = this;
-        var domain = uri.getUriProtocolAndDomain();
-        var reg = /^\//gi;
-        if (domain == "" && !reg.test(uri)) {
-            return uri;
-        }
-        var r = uri.substring(domain.length, uri.length);
-        var reg1 = /(^\/(\.\.\/)+)/gi;
-        var reg2 = /(\/[^\/.]+\/..\/)/gi;
-        var last = r;
-        do {
-            r = r.replace(reg1, "/");
-            r = r.replace(reg2, "/");
-            if (r.length == last.length) {
-                break;
+        var strHex = "#";
+        for (var i = 0; i < aColor.length; i++) {
+            var hex = Number(aColor[i]).toString(16);
+            if (hex.length == 1) {
+                hex = "0" + hex;
             }
-            last = r;
-        } while (true);
-        return domain.combineUri(r);
-    };
-}
-if (typeof (String.prototype.toColorHex) != "function") {
-    String.prototype.toColorHex = function () {
-        var that = this;
-        var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
-        if (/^(rgb|RGB)/.test(that) || that.split(",").length == 3) {
-            var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
-            if (aColor.length == 0 || (aColor.length == 1 && aColor[0].length == 0)) {
-                return "";
-            }
-            var strHex = "#";
-            for (var i = 0; i < aColor.length; i++) {
-                var hex = Number(aColor[i]).toString(16);
-                if (hex.length == 1) {
-                    hex = "0" + hex;
-                }
-                strHex += hex;
-            }
-            if (strHex.length !== 7) {
-                strHex = that;
-            }
-            return strHex;
+            strHex += hex;
         }
-        else if (regHexColor.test(that)) {
-            var aNum = that.replace(/#/, "").split("");
-            if (aNum.length === 6) {
-                return that;
-            }
-            else if (aNum.length === 3) {
-                var numHex = "#";
-                for (var i = 0; i < aNum.length; i += 1) {
-                    numHex += (aNum[i] + aNum[i]);
-                }
-                return numHex;
-            }
+        if (strHex.length !== 7) {
+            strHex = that;
         }
-        else {
+        return strHex;
+    }
+    else if (regHexColor.test(that)) {
+        var aNum = that.replace(/#/, "").split("");
+        if (aNum.length === 6) {
             return that;
         }
-    };
-}
-if (typeof (String.prototype.toColorRGB) != "function") {
-    String.prototype.toColorRGB = function () {
-        var sColor = this.toLowerCase();
-        var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
-        if (sColor && regHexColor.test(sColor)) {
-            if (sColor.length === 4) {
-                var sColorNew = "#";
-                for (var i = 1; i < 4; i += 1) {
-                    sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-                }
-                sColor = sColorNew;
+        else if (aNum.length === 3) {
+            var numHex = "#";
+            for (var i = 0; i < aNum.length; i += 1) {
+                numHex += (aNum[i] + aNum[i]);
             }
-            //处理六位的颜色值  
-            var sColorChange = [];
-            for (var i = 1; i < 7; i += 2) {
-                sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
+            return numHex;
+        }
+    }
+    else {
+        return that;
+    }
+};
+String.prototype.toColorRGB = function () {
+    var sColor = this.toLowerCase();
+    var regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
+    if (sColor && regHexColor.test(sColor)) {
+        if (sColor.length === 4) {
+            var sColorNew = "#";
+            for (var i = 1; i < 4; i += 1) {
+                sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
             }
-            return "RGB(" + sColorChange.join(",") + ")";
+            sColor = sColorNew;
         }
-        else {
-            return sColor;
+        //处理六位的颜色值  
+        var sColorChange = [];
+        for (var i = 1; i < 7; i += 2) {
+            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
         }
-    };
-}
+        return "RGB(" + sColorChange.join(",") + ")";
+    }
+    else {
+        return sColor;
+    }
+};
 /**
  * 转义一个字符串，使其符合 XML 实体规则。
  * @param str 一个文本片段。
