@@ -196,7 +196,7 @@ interface String {
      * alert(str.startsWith("not to be"));     // false
      * alert(str.startsWith("not to be", 10)); // true
      */
-    startsWith(searchString: string, position: GLuint): boolean;
+    startsWith(searchString: string, position?: GLuint): boolean;
     /**
      * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
      * @param searchString 要搜索的子字符串。
@@ -209,7 +209,7 @@ interface String {
      * alert( str.endsWith("to be", 19) );  // true
      * alert( str.endsWith("To be", 5) );   // true
      */
-    endsWith(searchString: string, position: GLuint): boolean;
+    endsWith(searchString: string, position?: GLuint): boolean;
     /**
      * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
      * @param trimChars 要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。

@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
 version：1.5.0
-last change：2021-3-23
+last change：2021-3-28
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -42,7 +42,7 @@ Number.prototype.format = function (pattern: string): string {
     //if (num == null) return null;
     //if (num == "") return "";
 
-    if (num != undefined && num != null && pattern) { //对小数点后数字做四舍五入。
+    if (typeof (num) !== "undefined" && num != null && pattern) { //对小数点后数字做四舍五入。
         let lio = pattern.lastIndexOf(".");
         if (lio != -1) {
             let How = pattern.length - lio - 1;
@@ -254,7 +254,7 @@ Date.prototype.format = function (pattern: string, local?: string): string {
     time.Week = this.getDay();
     time.AmPm = time.Hour < 13 ? 0 : 1;
 
-    if (pattern != undefined && pattern.replace(/\s/g, "").length > 0) {
+    if (typeof (pattern) !== "undefined" && pattern.replace(/\s/g, "").length > 0) {
         let loc = (local ? this.formatLocal[local] : this.formatLocal["en"]);
         time.regs = {
             "yyyy": time.Year,
@@ -452,7 +452,7 @@ interface String {
      * alert(str.startsWith("not to be"));     // false
      * alert(str.startsWith("not to be", 10)); // true
      */
-    startsWith(searchString: string, position: GLuint): boolean;
+    startsWith(searchString: string, position?: GLuint): boolean;
     /**
      * 判断字符串是否以指定的文本为后缀。（为 JavaScript String 对象添加的扩展方法。）
      * @param searchString 要搜索的子字符串。
@@ -465,7 +465,7 @@ interface String {
      * alert( str.endsWith("to be", 19) );  // true
      * alert( str.endsWith("To be", 5) );   // true
      */
-    endsWith(searchString: string, position: GLuint): boolean;
+    endsWith(searchString: string, position?: GLuint): boolean;
     /**
      * 从当前 String 对象移除数组中指定的一组字符的所有前导匹配项和尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
      * @param trimChars 要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
@@ -600,9 +600,9 @@ interface String {
     toColorRGB(): string;
 }
 
-String.prototype.startsWith = function (searchString: string, position: GLuint): boolean {
+String.prototype.startsWith = function (searchString: string, position?: GLuint): boolean {
     if (this.length >= searchString.length) {
-        if (position === undefined) {
+        if (typeof (position) === "undefined") {
             return this.substr(0, searchString.length) == searchString;
         }
         else {
@@ -612,9 +612,9 @@ String.prototype.startsWith = function (searchString: string, position: GLuint):
     return false;
 }
 
-String.prototype.endsWith = function (searchString: string, position: GLuint): boolean {
+String.prototype.endsWith = function (searchString: string, position?: GLuint): boolean {
     if (this.length >= searchString.length) {
-        if (position === undefined) {
+        if (typeof (position) === "undefined") {
             return this.substr(this.length - searchString.length) == searchString;
         }
         else {
@@ -625,7 +625,7 @@ String.prototype.endsWith = function (searchString: string, position: GLuint): b
 }
 
 String.prototype.trim = function (trimChars?: string | string[] | null): string {
-    if (typeof (trimChars) == "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (typeof (trimChars) === "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '').replace(/\s*$/, '');
     }
     else {
@@ -980,7 +980,7 @@ String.prototype.removeUriParameter = function (name: string): string {
 
 String.prototype.clearUriParameter = function (retainSharp?: boolean): string {
     let r = UriExtTool.Create(this);
-    r.clearUriParameter(typeof (retainSharp) == "undefined" ? false : retainSharp);
+    r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 }
 
@@ -1003,7 +1003,7 @@ String.prototype.getUriProtocolAndDomain = function (): string {
 
 String.prototype.getUriPath = function (): string {
     let uri = this;
-    if (uri == undefined || uri == null || uri == "") {
+    if (typeof (uri) === "undefined" || uri == null || uri == "") {
         return null;
     }
     let path = uri.clearUriParameter();

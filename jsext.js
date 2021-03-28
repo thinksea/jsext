@@ -1,7 +1,7 @@
 /*
 对 JavaScript 原生功能进行最小扩展。
 version：1.5.0
-last change：2021-3-23
+last change：2021-3-28
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -12,7 +12,7 @@ Number.prototype.format = function (pattern) {
     //if (num === undefined) return undefined;
     //if (num == null) return null;
     //if (num == "") return "";
-    if (num != undefined && num != null && pattern) { //对小数点后数字做四舍五入。
+    if (typeof (num) !== "undefined" && num != null && pattern) { //对小数点后数字做四舍五入。
         var lio = pattern.lastIndexOf(".");
         if (lio != -1) {
             var How = pattern.length - lio - 1;
@@ -99,7 +99,7 @@ Date.prototype.format = function (pattern, local) {
     time.Millisecond = this.getMilliseconds();
     time.Week = this.getDay();
     time.AmPm = time.Hour < 13 ? 0 : 1;
-    if (pattern != undefined && pattern.replace(/\s/g, "").length > 0) {
+    if (typeof (pattern) !== "undefined" && pattern.replace(/\s/g, "").length > 0) {
         var loc = (local ? this.formatLocal[local] : this.formatLocal["en"]);
         time.regs = {
             "yyyy": time.Year,
@@ -247,7 +247,7 @@ function regExpEscape(str) {
 }
 String.prototype.startsWith = function (searchString, position) {
     if (this.length >= searchString.length) {
-        if (position === undefined) {
+        if (typeof (position) === "undefined") {
             return this.substr(0, searchString.length) == searchString;
         }
         else {
@@ -258,7 +258,7 @@ String.prototype.startsWith = function (searchString, position) {
 };
 String.prototype.endsWith = function (searchString, position) {
     if (this.length >= searchString.length) {
-        if (position === undefined) {
+        if (typeof (position) === "undefined") {
             return this.substr(this.length - searchString.length) == searchString;
         }
         else {
@@ -268,7 +268,7 @@ String.prototype.endsWith = function (searchString, position) {
     return false;
 };
 String.prototype.trim = function (trimChars) {
-    if (typeof (trimChars) == "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (typeof (trimChars) === "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '').replace(/\s*$/, '');
     }
     else {
@@ -595,7 +595,7 @@ String.prototype.removeUriParameter = function (name) {
 };
 String.prototype.clearUriParameter = function (retainSharp) {
     var r = UriExtTool.Create(this);
-    r.clearUriParameter(typeof (retainSharp) == "undefined" ? false : retainSharp);
+    r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 };
 String.prototype.getUriProtocolAndDomain = function () {
@@ -616,7 +616,7 @@ String.prototype.getUriProtocolAndDomain = function () {
 };
 String.prototype.getUriPath = function () {
     var uri = this;
-    if (uri == undefined || uri == null || uri == "") {
+    if (typeof (uri) === "undefined" || uri == null || uri == "") {
         return null;
     }
     var path = uri.clearUriParameter();
