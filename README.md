@@ -48,7 +48,7 @@ alert("http://www.thinksea.com:8080/a.htm#mark2".getUriProtocolAndDomain());//�
 
 ###### version：1.0.5
 
-修复方法“getUriProtocolAndDomain”的注释错误。请注意，方法的返回值无左下划线“/”后缀。
+修复方法“getUriProtocolAndDomain”的注释错误。请注意，方法的返回值无正斜线“/”后缀。
 
 示例：
 ```javascript
@@ -293,7 +293,7 @@ alert("http://www.thinksea.com:8080/a.htm".getUriProtocolAndDomain());//返回�
 ```
 
 # String.prototype.getUriPath
-获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以左下划线“/”为后缀。
+获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以正斜线“/”为后缀。
 
 ```javascript
 alert("http://www.thinksea.com/a.aspx?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/

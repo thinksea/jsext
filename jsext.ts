@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.5.0
-last change：2021-3-28
+version：1.5.1
+last change：2022-2-16
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -547,7 +547,7 @@ interface String {
      */
     getUriProtocolAndDomain(): string;
     /**
-     * 获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以左下划线“/”为后缀。
+     * 获取指定的 URI 的路径（不包含文件名和参数部分），返回结果以正斜线“/”为后缀。
      * @returns 找不到返回 null，否则返回找到的值。
      * @description 下列情况中(*.*)视为文件名
      *     1、xxxx://domain/(*.*)
