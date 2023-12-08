@@ -2,6 +2,26 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.6.0
+
+弃用了一些 Date 对象的方法：
+addMilliseconds
+addSeconds
+addMinutes
+addHours
+addDays
+addMonths
+addYears
+
+增加了新的替代方法：（注意：执行下列方法并不会导致更改原 Date 实例中的数据）
+addMilliseconds2
+addSeconds2
+addMinutes2
+addHours2
+addDays2
+addMonths2
+addYears2
+
 ###### version：1.5.0
 
 修复 BUG

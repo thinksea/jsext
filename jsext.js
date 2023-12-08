@@ -1,7 +1,7 @@
 /*
 对 JavaScript 原生功能进行最小扩展。
-version：1.5.1
-last change：2022-2-16
+version：1.6.0
+last change：2023-12-9
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -178,8 +178,18 @@ Date.prototype.addMilliseconds = function (value) {
     date.setMilliseconds(date.getMilliseconds() + value);
     return date;
 };
+Date.prototype.addMilliseconds2 = function (value) {
+    var date = new Date(this);
+    date.setMilliseconds(date.getMilliseconds() + value);
+    return date;
+};
 Date.prototype.addSeconds = function (value) {
     var date = this;
+    date.setSeconds(date.getSeconds() + value);
+    return date;
+};
+Date.prototype.addSeconds2 = function (value) {
+    var date = new Date(this);
     date.setSeconds(date.getSeconds() + value);
     return date;
 };
@@ -188,8 +198,18 @@ Date.prototype.addMinutes = function (value) {
     date.setMinutes(date.getMinutes() + value);
     return date;
 };
+Date.prototype.addMinutes2 = function (value) {
+    var date = new Date(this);
+    date.setMinutes(date.getMinutes() + value);
+    return date;
+};
 Date.prototype.addHours = function (value) {
     var date = this;
+    date.setHours(date.getHours() + value);
+    return date;
+};
+Date.prototype.addHours2 = function (value) {
+    var date = new Date(this);
     date.setHours(date.getHours() + value);
     return date;
 };
@@ -198,13 +218,28 @@ Date.prototype.addDays = function (value) {
     date.setDate(date.getDate() + value);
     return date;
 };
+Date.prototype.addDays2 = function (value) {
+    var date = new Date(this);
+    date.setDate(date.getDate() + value);
+    return date;
+};
 Date.prototype.addMonths = function (value) {
     var date = this;
     date.setMonth(date.getMonth() + value);
     return date;
 };
+Date.prototype.addMonths2 = function (value) {
+    var date = new Date(this);
+    date.setMonth(date.getMonth() + value);
+    return date;
+};
 Date.prototype.addYears = function (value) {
     var date = this;
+    date.setFullYear(date.getFullYear() + value);
+    return date;
+};
+Date.prototype.addYears2 = function (value) {
+    var date = new Date(this);
     date.setFullYear(date.getFullYear() + value);
     return date;
 };

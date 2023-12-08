@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.5.1
-last change：2022-2-16
+version：1.6.0
+last change：2023-12-9
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -192,44 +192,93 @@ interface Date {
      * 增加/减少毫秒。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addMilliseconds2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addMilliseconds(value: GLint): Date;
+    /**
+     * 增加/减少毫秒。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addMilliseconds2(value: GLint): Date;
     /**
      * 增加/减少秒。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addSeconds2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addSeconds(value: GLint): Date;
+    /**
+     * 增加/减少秒。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addSeconds2(value: GLint): Date;
     /**
      * 增加/减少分钟。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addMinutes2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addMinutes(value: GLint): Date;
+    /**
+     * 增加/减少分钟。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addMinutes2(value: GLint): Date;
     /**
      * 增加/减少小时。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addHours2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addHours(value: GLint): Date;
+    /**
+     * 增加/减少小时。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addHours2(value: GLint): Date;
     /**
      * 增加/减少天。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addDays2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addDays(value: GLint): Date;
+    /**
+     * 增加/减少天。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addDays2(value: GLint): Date;
     /**
      * 增加/减少月。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addMonths2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addMonths(value: GLint): Date;
+    /**
+     * 增加/减少月。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addMonths2(value: GLint): Date;
     /**
      * 增加/减少年。
      * @param value 一个整数，正数表示增加，负数表示减少。
      * @returns {Date} 调整后的新 Date 实例。
+     * @deprecated 此方法已弃用，请使用替代方法 addYears2，注意：新方法的功能实现与此方法之间的差异性。
      */
     addYears(value: GLint): Date;
+    /**
+     * 增加/减少年。注意：执行此方法并不会导致更改此实例中的数据。
+     * @param value 一个整数，正数表示增加，负数表示减少。
+     * @returns {Date} 调整后的新 Date 实例。
+     */
+    addYears2(value: GLint): Date;
 }
 
 Date.prototype.format = function (pattern: string, local?: string): string {
@@ -337,8 +386,20 @@ Date.prototype.addMilliseconds = function (value: GLint): Date {
     return date;
 }
 
+Date.prototype.addMilliseconds2 = function (value: GLint): Date {
+    let date = new Date(this);
+    date.setMilliseconds(date.getMilliseconds() + value);
+    return date;
+}
+
 Date.prototype.addSeconds = function (value: GLint): Date {
     let date = this;
+    date.setSeconds(date.getSeconds() + value);
+    return date;
+}
+
+Date.prototype.addSeconds2 = function (value: GLint): Date {
+    let date = new Date(this);
     date.setSeconds(date.getSeconds() + value);
     return date;
 }
@@ -349,8 +410,20 @@ Date.prototype.addMinutes = function (value: GLint): Date {
     return date;
 }
 
+Date.prototype.addMinutes2 = function (value: GLint): Date {
+    let date = new Date(this);
+    date.setMinutes(date.getMinutes() + value);
+    return date;
+}
+
 Date.prototype.addHours = function (value: GLint): Date {
     let date = this;
+    date.setHours(date.getHours() + value);
+    return date;
+}
+
+Date.prototype.addHours2 = function (value: GLint): Date {
+    let date = new Date(this);
     date.setHours(date.getHours() + value);
     return date;
 }
@@ -361,14 +434,32 @@ Date.prototype.addDays = function (value: GLint): Date {
     return date;
 }
 
+Date.prototype.addDays2 = function (value: GLint): Date {
+    let date = new Date(this);
+    date.setDate(date.getDate() + value);
+    return date;
+}
+
 Date.prototype.addMonths = function (value: GLint): Date {
     let date = this;
     date.setMonth(date.getMonth() + value);
     return date;
 }
 
+Date.prototype.addMonths2 = function (value: GLint): Date {
+    let date = new Date(this);
+    date.setMonth(date.getMonth() + value);
+    return date;
+}
+
 Date.prototype.addYears = function (value: GLint): Date {
     let date = this;
+    date.setFullYear(date.getFullYear() + value);
+    return date;
+}
+
+Date.prototype.addYears2 = function (value: GLint): Date {
+    let date = new Date(this);
     date.setFullYear(date.getFullYear() + value);
     return date;
 }
