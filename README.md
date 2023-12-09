@@ -5,22 +5,22 @@
 ###### version：1.6.0
 
 弃用了一些 Date 对象的方法：
-addMilliseconds
-addSeconds
-addMinutes
-addHours
-addDays
-addMonths
-addYears
++ addMilliseconds
++ addSeconds
++ addMinutes
++ addHours
++ addDays
++ addMonths
++ addYears
 
 增加了新的替代方法：（注意：执行下列方法并不会导致更改原 Date 实例中的数据）
-addMilliseconds2
-addSeconds2
-addMinutes2
-addHours2
-addDays2
-addMonths2
-addYears2
++ addMilliseconds2
++ addSeconds2
++ addMinutes2
++ addHours2
++ addDays2
++ addMonths2
++ addYears2
 
 ###### version：1.5.0
 
@@ -41,7 +41,6 @@ addYears2
 
 + 1、isWeixinBrowser(): boolean 判断是否在微信浏览器内访问网页。
 
-=======
 ###### version：1.0.8
 
 + 1、isMobile(): boolean 判断用户端访问环境是否移动电话浏览器。
