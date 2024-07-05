@@ -1,7 +1,7 @@
 /*
 对 JavaScript 原生功能进行最小扩展。
-version：1.6.0
-last change：2023-12-9
+version：1.7.0
+last change：2024-07-05
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -22,8 +22,9 @@ Number.prototype.format = function (pattern) {
     var strarr = num ? num.toString().split('.') : ['0'];
     var fmtarr = pattern ? pattern.split('.') : [''];
     var retstr = '';
-    // 整数部分  
-    var str = strarr[0];
+    var negativeNumber = num < 0; //指示是否负数
+    // 整数部分，不包含负号
+    var str = (negativeNumber ? strarr[0].substring(1) : strarr[0]);
     var fmt = fmtarr[0];
     var i = str.length - 1;
     var comma = false;
@@ -76,14 +77,14 @@ Number.prototype.format = function (pattern) {
                 break;
         }
     }
-    return retstr.replace(/^,+/, '').replace(/\.$/, '');
+    return (negativeNumber ? '-' : '') + retstr.replace(/^,+/, '').replace(/\.$/, '');
 };
 Date.prototype.format = function (pattern, local) {
     if (!pattern)
         return this.toString();
     var time = {};
     time.Year = this.getFullYear();
-    time.TYear = ("" + time.Year).substr(2);
+    time.TYear = ("" + time.Year).substring(2);
     time.Month = this.getMonth() + 1;
     time.TMonth = time.Month < 10 ? "0" + time.Month : time.Month;
     time.Day = this.getDate();
@@ -122,12 +123,12 @@ Date.prototype.format = function (pattern, local) {
             "m": time.Minute,
             "ss": time.TSecond,
             "s": time.Second,
-            "fff": (time.Millisecond / 1000).format("0.000").substr(2),
-            "ff": (time.Millisecond / 1000).format("0.00").substr(2),
-            "f": (time.Millisecond / 1000).format("0.0").substr(2),
-            "FFF": (time.Millisecond / 1000).format("0.###").substr(2),
-            "FF": (time.Millisecond / 1000).format("0.##").substr(2),
-            "F": (time.Millisecond / 1000).format("0.#").substr(2),
+            "fff": (time.Millisecond / 1000).format("0.000").substring(2),
+            "ff": (time.Millisecond / 1000).format("0.00").substring(2),
+            "f": (time.Millisecond / 1000).format("0.0").substring(2),
+            "FFF": (time.Millisecond / 1000).format("0.###").substring(2),
+            "FF": (time.Millisecond / 1000).format("0.##").substring(2),
+            "F": (time.Millisecond / 1000).format("0.#").substring(2),
             "tt": loc.AMPMLong[time.AmPm],
             "t": loc.AMPM[time.AmPm]
         };
@@ -145,7 +146,7 @@ Date.prototype.format = function (pattern, local) {
             }
             if (!finded) {
                 result += pattern[0];
-                pattern = pattern.substr(1);
+                pattern = pattern.substring(1);
             }
         }
         return result;
@@ -414,7 +415,7 @@ String.prototype.getExtensionName = function () {
     if (dot == -1) {
         return "";
     }
-    return fileName.substr(dot);
+    return fileName.substring(dot);
 };
 //#region  URI 参数处理。
 /**
