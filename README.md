@@ -2,6 +2,10 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.7.1
+
+version 1.7.1 弃用了过期的方法（String.prototype.substr）
+
 ###### version：1.7.0
 
 修复了格式化数字显示方法（Number.prototype.format）的BUG，该 BUG 会导致负号后接千位分隔符（像这样 -,123,456）
