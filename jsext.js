@@ -1,4 +1,4 @@
-/*
+﻿/*
 对 JavaScript 原生功能进行最小扩展。
 version：1.7.0
 last change：2024-07-05
