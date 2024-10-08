@@ -1,4 +1,4 @@
-# jsext
+﻿# jsext
 对 JavaScript 原生功能进行最小扩展
 
 =======
