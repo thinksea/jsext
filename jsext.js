@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.7.0
-last change：2024-07-05
+version：1.7.2
+last change：2025-05-04
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -427,10 +427,10 @@ String.prototype.getExtensionName = function () {
 };
 //#region  URI 参数处理。
 /**
- * 封装了 URI 扩展处理功能。（***此对象仅供内部代码使用，请勿引用。）
+ * 封装了 URI 扩展处理功能。
  */
-var UriExtTool = /** @class */ (function () {
-    function UriExtTool() {
+var UriCreator = /** @class */ (function () {
+    function UriCreator() {
         /**
          * URI 基本路径信息。
          */
@@ -449,8 +449,8 @@ var UriExtTool = /** @class */ (function () {
      * @param uri 一个可能包含参数的 uri 字符串。
      * @returns URI 解析实例。
      */
-    UriExtTool.Create = function (uri) {
-        var result = new UriExtTool();
+    UriCreator.Create = function (uri) {
+        var result = new UriCreator();
         var queryIndex = uri.indexOf('?');
         var sharpIndex = -1;
         if (queryIndex > -1) {
@@ -486,10 +486,10 @@ var UriExtTool = /** @class */ (function () {
                     var item = queryList[i];
                     var enqIndex = item.indexOf('=');
                     if (enqIndex > -1) {
-                        result.query.push(new UriExtTool.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
+                        result.query.push(new UriCreator.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
                     }
                     else {
-                        result.query.push(new UriExtTool.QueryItem(item, null));
+                        result.query.push(new UriCreator.QueryItem(item, null));
                     }
                 }
             }
@@ -497,10 +497,35 @@ var UriExtTool = /** @class */ (function () {
         return result;
     };
     /**
+     * 对参数按照参数名升序排序。
+     */
+    UriCreator.prototype.sortQuery = function () {
+        if (this.query != null) {
+            var collator_1 = new Intl.Collator(undefined, {
+                sensitivity: 'base',
+                numeric: true // 如果需要数字也正确排序
+            });
+            this.query.sort(function (a, b) { return collator_1.compare(a.key, b.key); });
+        }
+    };
+    /**
+     * 删除值为 null 或 undefined 或者空字符串的参数。
+     */
+    UriCreator.prototype.removeNullOrEmpty = function () {
+        if (this.query != null) {
+            for (var i = this.query.length - 1; i >= 0; i--) {
+                var item = this.query[i];
+                if (typeof (item.value) === "undefined" || item.value === null || item.value === '') {
+                    this.query.remove(item);
+                }
+            }
+        }
+    };
+    /**
      * 返回此实例的字符串表示形式。
      * @returns 返回一个 URI，此实例到字符串表示形式。
      */
-    UriExtTool.prototype.toString = function () {
+    UriCreator.prototype.toString = function () {
         var sb = "";
         if (this.path != null) {
             sb += this.path;
@@ -525,11 +550,12 @@ var UriExtTool = /** @class */ (function () {
      * @param name 参数名。
      * @returns 指定参数的值，如果找不到这个参数则返回 null。
      */
-    UriExtTool.prototype.getUriParameter = function (name) {
+    UriCreator.prototype.getUriParameter = function (name) {
         if (this.query != null) {
+            var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
                 var item = this.query[i];
-                if (item.key.toLowerCase() == name.toLowerCase()) {
+                if (item.key.toLowerCase() == name_lowerCase) {
                     if (item.value == null) {
                         return null;
                     }
@@ -547,12 +573,13 @@ var UriExtTool = /** @class */ (function () {
      * @param name 参数名。
      * @param value 新的参数值。
      */
-    UriExtTool.prototype.setUriParameter = function (name, value) {
+    UriCreator.prototype.setUriParameter = function (name, value) {
         if (this.query != null) {
+            var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
                 var item = this.query[i];
-                if (item.key.toLowerCase() == name.toLowerCase()) {
-                    this.query[i] = new UriExtTool.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
+                if (item.key.toLowerCase() == name_lowerCase) {
+                    this.query[i] = new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
                     return;
                 }
             }
@@ -560,17 +587,18 @@ var UriExtTool = /** @class */ (function () {
         if (this.query == null) {
             this.query = new Array();
         }
-        this.query.push(new UriExtTool.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
+        this.query.push(new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
     };
     /**
      * 从指定的 URI 删除参数。
      * @param name 参数名。
      */
-    UriExtTool.prototype.removeUriParameter = function (name) {
+    UriCreator.prototype.removeUriParameter = function (name) {
         if (this.query != null) {
+            var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
                 var item = this.query[i];
-                if (item.key.toLowerCase() == name.toLowerCase()) {
+                if (item.key.toLowerCase() == name_lowerCase) {
                     this.query.remove(item);
                 }
             }
@@ -581,17 +609,17 @@ var UriExtTool = /** @class */ (function () {
      * @param retainSharp 指示是否应保留页面内部定位标记（井号后的内容）。
      * @returns 已经去除参数的 uri 字符串。
      */
-    UriExtTool.prototype.clearUriParameter = function (retainSharp) {
+    UriCreator.prototype.clearUriParameter = function (retainSharp) {
         this.query = null;
         if (!retainSharp) {
             this.mark = null;
         }
     };
-    return UriExtTool;
+    return UriCreator;
 }());
-(function (UriExtTool) {
+(function (UriCreator) {
     /**
-     * 定义 URI 的基础参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
+     * 定义 URI 的参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
      */
     var QueryItem = /** @class */ (function () {
         /**
@@ -620,25 +648,25 @@ var UriExtTool = /** @class */ (function () {
         };
         return QueryItem;
     }());
-    UriExtTool.QueryItem = QueryItem;
-})(UriExtTool || (UriExtTool = {}));
+    UriCreator.QueryItem = QueryItem;
+})(UriCreator || (UriCreator = {}));
 //#endregion
 String.prototype.getUriParameter = function (name) {
-    var r = UriExtTool.Create(this);
+    var r = UriCreator.Create(this);
     return r.getUriParameter(name);
 };
 String.prototype.setUriParameter = function (name, value) {
-    var r = UriExtTool.Create(this);
+    var r = UriCreator.Create(this);
     r.setUriParameter(name, value);
     return r.toString();
 };
 String.prototype.removeUriParameter = function (name) {
-    var r = UriExtTool.Create(this);
+    var r = UriCreator.Create(this);
     r.removeUriParameter(name);
     return r.toString();
 };
 String.prototype.clearUriParameter = function (retainSharp) {
-    var r = UriExtTool.Create(this);
+    var r = UriCreator.Create(this);
     r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 };

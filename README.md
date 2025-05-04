@@ -2,6 +2,10 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.7.2
+
+version 1.7.2 新增类对象 UriCreator 用于构建 URI。
+
 ###### version：1.7.1
 
 version 1.7.1 弃用了过期的方法（String.prototype.substr）

@@ -278,7 +278,7 @@ interface String {
      *     alert("aaabccdeaabaaa".trimStart(['a', 'b'])) //输出“ccdeaabaaa”
      *     alert("aaabccdeaabaaa".trimStart('a', 'b')) //输出“ccdeaabaaa”
      */
-    trimStart(trimChars: string | string[] | null): string;
+    trimStart(trimChars?: string | string[] | null): string;
     /**
      * 从当前 String 对象移除数组中指定的一组字符的所有尾部匹配项。（为 JavaScript String 对象添加的扩展方法。）
      * @param trimChars：要删除的字符的数组，或 null。如果 trimChars 为 null 或空数组，则改为删除空白字符。
@@ -288,7 +288,7 @@ interface String {
      *     alert("aaabccdeaabaaa".trimEnd(['a', 'b'])) //输出“aaabccde”
      *     alert("aaabccdeaabaaa".trimEnd('a', 'b')) //输出“aaabccde”
      */
-    trimEnd(trimChars: string | string[] | null): string;
+    trimEnd(trimChars?: string | string[] | null): string;
     /**
      * 获取文件全名。（为 JavaScript String 对象添加的扩展方法。）
      * @returns 文件名。
@@ -393,9 +393,9 @@ interface String {
     toColorRGB(): string;
 }
 /**
- * 封装了 URI 扩展处理功能。（***此对象仅供内部代码使用，请勿引用。）
+ * 封装了 URI 扩展处理功能。
  */
-declare class UriExtTool {
+declare class UriCreator {
     /**
      * URI 基本路径信息。
      */
@@ -413,7 +413,15 @@ declare class UriExtTool {
      * @param uri 一个可能包含参数的 uri 字符串。
      * @returns URI 解析实例。
      */
-    static Create(uri: string): UriExtTool;
+    static Create(uri: string): UriCreator;
+    /**
+     * 对参数按照参数名升序排序。
+     */
+    sortQuery(): void;
+    /**
+     * 删除值为 null 或 undefined 或者空字符串的参数。
+     */
+    removeNullOrEmpty(): void;
     /**
      * 返回此实例的字符串表示形式。
      * @returns 返回一个 URI，此实例到字符串表示形式。
@@ -443,9 +451,9 @@ declare class UriExtTool {
      */
     clearUriParameter(retainSharp: boolean): void;
 }
-declare namespace UriExtTool {
+declare namespace UriCreator {
     /**
-     * 定义 URI 的基础参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
+     * 定义 URI 的参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
      */
     class QueryItem {
         /**
