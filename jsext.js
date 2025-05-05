@@ -497,8 +497,7 @@ var UriBuilder = /** @class */ (function () {
     UriBuilder.prototype.sortQuery = function () {
         if (this.query != null) {
             var collator_1 = new Intl.Collator(undefined, {
-                sensitivity: 'base',
-                numeric: true // 如果需要数字也正确排序
+                sensitivity: 'base'
             });
             this.query.sort(function (a, b) { return collator_1.compare(a.key, b.key); });
         }

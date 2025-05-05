@@ -925,8 +925,7 @@ class UriBuilder {
     public sortQuery(): void {
         if (this.query != null) {
             const collator = new Intl.Collator(undefined, {
-                sensitivity: 'base',
-                numeric: true // 如果需要数字也正确排序
+                sensitivity: 'base'
             });
             this.query.sort((a, b) => { return collator.compare(a.key, b.key); });
         }
