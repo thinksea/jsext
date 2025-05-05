@@ -429,8 +429,12 @@ String.prototype.getExtensionName = function () {
 /**
  * 封装了 URI 扩展处理功能。
  */
-var UriCreator = /** @class */ (function () {
-    function UriCreator() {
+var UriBuilder = /** @class */ (function () {
+    /**
+     * 用指定的 URI 创建此实例。
+     * @param uri 一个 uri 字符串。
+     */
+    function UriBuilder(uri) {
         /**
          * URI 基本路径信息。
          */
@@ -443,14 +447,6 @@ var UriCreator = /** @class */ (function () {
          * URI 的页面内部定位标记
          */
         this.mark = null;
-    }
-    /**
-     * 用指定的 URI 创建此实例。
-     * @param uri 一个可能包含参数的 uri 字符串。
-     * @returns URI 解析实例。
-     */
-    UriCreator.Create = function (uri) {
-        var result = new UriCreator();
         var queryIndex = uri.indexOf('?');
         var sharpIndex = -1;
         if (queryIndex > -1) {
@@ -460,16 +456,16 @@ var UriCreator = /** @class */ (function () {
             sharpIndex = uri.indexOf('#');
         }
         if (queryIndex > -1) {
-            result.path = uri.substring(0, queryIndex);
+            this.path = uri.substring(0, queryIndex);
         }
         else if (sharpIndex > -1) {
-            result.path = uri.substring(0, sharpIndex);
+            this.path = uri.substring(0, sharpIndex);
         }
         else {
-            result.path = uri;
+            this.path = uri;
         }
         if (sharpIndex > -1) {
-            result.mark = uri.substring(sharpIndex);
+            this.mark = uri.substring(sharpIndex);
         }
         if (queryIndex > -1) {
             var queryString = void 0;
@@ -480,26 +476,25 @@ var UriCreator = /** @class */ (function () {
                 queryString = uri.substring(queryIndex + 1);
             }
             if (queryString.length > 0) {
-                result.query = new Array();
+                this.query = new Array();
                 var queryList = queryString.split(/&|\?/);
                 for (var i = 0; i < queryList.length; i++) {
                     var item = queryList[i];
                     var enqIndex = item.indexOf('=');
                     if (enqIndex > -1) {
-                        result.query.push(new UriCreator.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
+                        this.query.push(new UriBuilder.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
                     }
                     else {
-                        result.query.push(new UriCreator.QueryItem(item, null));
+                        this.query.push(new UriBuilder.QueryItem(item, null));
                     }
                 }
             }
         }
-        return result;
-    };
+    }
     /**
      * 对参数按照参数名升序排序。
      */
-    UriCreator.prototype.sortQuery = function () {
+    UriBuilder.prototype.sortQuery = function () {
         if (this.query != null) {
             var collator_1 = new Intl.Collator(undefined, {
                 sensitivity: 'base',
@@ -511,7 +506,7 @@ var UriCreator = /** @class */ (function () {
     /**
      * 删除值为 null 或 undefined 或者空字符串的参数。
      */
-    UriCreator.prototype.removeNullOrEmpty = function () {
+    UriBuilder.prototype.removeNullOrEmpty = function () {
         if (this.query != null) {
             for (var i = this.query.length - 1; i >= 0; i--) {
                 var item = this.query[i];
@@ -525,7 +520,7 @@ var UriCreator = /** @class */ (function () {
      * 返回此实例的字符串表示形式。
      * @returns 返回一个 URI，此实例到字符串表示形式。
      */
-    UriCreator.prototype.toString = function () {
+    UriBuilder.prototype.toString = function () {
         var sb = "";
         if (this.path != null) {
             sb += this.path;
@@ -550,7 +545,7 @@ var UriCreator = /** @class */ (function () {
      * @param name 参数名。
      * @returns 指定参数的值，如果找不到这个参数则返回 null。
      */
-    UriCreator.prototype.getUriParameter = function (name) {
+    UriBuilder.prototype.getUriParameter = function (name) {
         if (this.query != null) {
             var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
@@ -573,13 +568,13 @@ var UriCreator = /** @class */ (function () {
      * @param name 参数名。
      * @param value 新的参数值。
      */
-    UriCreator.prototype.setUriParameter = function (name, value) {
+    UriBuilder.prototype.setUriParameter = function (name, value) {
         if (this.query != null) {
             var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
                 var item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    this.query[i] = new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
+                    this.query[i] = new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
                     return;
                 }
             }
@@ -587,13 +582,13 @@ var UriCreator = /** @class */ (function () {
         if (this.query == null) {
             this.query = new Array();
         }
-        this.query.push(new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
+        this.query.push(new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
     };
     /**
      * 从指定的 URI 删除参数。
      * @param name 参数名。
      */
-    UriCreator.prototype.removeUriParameter = function (name) {
+    UriBuilder.prototype.removeUriParameter = function (name) {
         if (this.query != null) {
             var name_lowerCase = name.toLowerCase();
             for (var i = 0; i < this.query.length; i++) {
@@ -609,15 +604,15 @@ var UriCreator = /** @class */ (function () {
      * @param retainSharp 指示是否应保留页面内部定位标记（井号后的内容）。
      * @returns 已经去除参数的 uri 字符串。
      */
-    UriCreator.prototype.clearUriParameter = function (retainSharp) {
+    UriBuilder.prototype.clearUriParameter = function (retainSharp) {
         this.query = null;
         if (!retainSharp) {
             this.mark = null;
         }
     };
-    return UriCreator;
+    return UriBuilder;
 }());
-(function (UriCreator) {
+(function (UriBuilder) {
     /**
      * 定义 URI 的参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
      */
@@ -648,25 +643,25 @@ var UriCreator = /** @class */ (function () {
         };
         return QueryItem;
     }());
-    UriCreator.QueryItem = QueryItem;
-})(UriCreator || (UriCreator = {}));
+    UriBuilder.QueryItem = QueryItem;
+})(UriBuilder || (UriBuilder = {}));
 //#endregion
 String.prototype.getUriParameter = function (name) {
-    var r = UriCreator.Create(this);
+    var r = new UriBuilder(this);
     return r.getUriParameter(name);
 };
 String.prototype.setUriParameter = function (name, value) {
-    var r = UriCreator.Create(this);
+    var r = new UriBuilder(this);
     r.setUriParameter(name, value);
     return r.toString();
 };
 String.prototype.removeUriParameter = function (name) {
-    var r = UriCreator.Create(this);
+    var r = new UriBuilder(this);
     r.removeUriParameter(name);
     return r.toString();
 };
 String.prototype.clearUriParameter = function (retainSharp) {
-    var r = UriCreator.Create(this);
+    var r = new UriBuilder(this);
     r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 };

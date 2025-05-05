@@ -395,7 +395,7 @@ interface String {
 /**
  * 封装了 URI 扩展处理功能。
  */
-declare class UriCreator {
+declare class UriBuilder {
     /**
      * URI 基本路径信息。
      */
@@ -410,10 +410,9 @@ declare class UriCreator {
     private mark;
     /**
      * 用指定的 URI 创建此实例。
-     * @param uri 一个可能包含参数的 uri 字符串。
-     * @returns URI 解析实例。
+     * @param uri 一个 uri 字符串。
      */
-    static Create(uri: string): UriCreator;
+    constructor(uri: string);
     /**
      * 对参数按照参数名升序排序。
      */
@@ -451,7 +450,7 @@ declare class UriCreator {
      */
     clearUriParameter(retainSharp: boolean): void;
 }
-declare namespace UriCreator {
+declare namespace UriBuilder {
     /**
      * 定义 URI 的参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
      */

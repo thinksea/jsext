@@ -852,7 +852,7 @@ String.prototype.getExtensionName = function (): string {
 /**
  * 封装了 URI 扩展处理功能。
  */
-class UriCreator {
+class UriBuilder {
     /**
      * URI 基本路径信息。
      */
@@ -860,7 +860,7 @@ class UriCreator {
     /**
      * URI 的参数。
      */
-    private query: Array<UriCreator.QueryItem> = null;
+    private query: Array<UriBuilder.QueryItem> = null;
     /**
      * URI 的页面内部定位标记
      */
@@ -868,12 +868,9 @@ class UriCreator {
 
     /**
      * 用指定的 URI 创建此实例。
-     * @param uri 一个可能包含参数的 uri 字符串。
-     * @returns URI 解析实例。
+     * @param uri 一个 uri 字符串。
      */
-    public static Create(uri: string): UriCreator {
-        let result: UriCreator = new UriCreator();
-
+    constructor(uri: string) {
         let queryIndex: GLint = uri.indexOf('?');
         let sharpIndex: GLint = -1;
         if (queryIndex > -1) {
@@ -884,17 +881,17 @@ class UriCreator {
         }
 
         if (queryIndex > -1) {
-            result.path = uri.substring(0, queryIndex);
+            this.path = uri.substring(0, queryIndex);
         }
         else if (sharpIndex > -1) {
-            result.path = uri.substring(0, sharpIndex);
+            this.path = uri.substring(0, sharpIndex);
         }
         else {
-            result.path = uri;
+            this.path = uri;
         }
 
         if (sharpIndex > -1) {
-            result.mark = uri.substring(sharpIndex);
+            this.mark = uri.substring(sharpIndex);
         }
 
         if (queryIndex > -1) {
@@ -906,22 +903,20 @@ class UriCreator {
                 queryString = uri.substring(queryIndex + 1);
             }
             if (queryString.length > 0) {
-                result.query = new Array<UriCreator.QueryItem>();
+                this.query = new Array<UriBuilder.QueryItem>();
                 let queryList: string[] = queryString.split(/&|\?/);
                 for (let i = 0; i < queryList.length; i++) {
                     let item = queryList[i];
                     let enqIndex: GLint = item.indexOf('=');
                     if (enqIndex > -1) {
-                        result.query.push(new UriCreator.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
+                        this.query.push(new UriBuilder.QueryItem(item.substring(0, enqIndex), item.substring(enqIndex + 1)));
                     }
                     else {
-                        result.query.push(new UriCreator.QueryItem(item, null));
+                        this.query.push(new UriBuilder.QueryItem(item, null));
                     }
                 }
             }
         }
-
-        return result;
     }
 
     /**
@@ -963,7 +958,7 @@ class UriCreator {
         if (this.query != null && this.query.length > 0) {
             sb += '?';
             for (let i: GLint = 0; i < this.query.length; i++) {
-                let item: UriCreator.QueryItem = this.query[i];
+                let item: UriBuilder.QueryItem = this.query[i];
                 if (i > 0) {
                     sb += '&';
                 }
@@ -1011,15 +1006,15 @@ class UriCreator {
             for (let i: GLint = 0; i < this.query.length; i++) {
                 let item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    this.query[i] = new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
+                    this.query[i] = new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
                     return;
                 }
             }
         }
         if (this.query == null) {
-            this.query = new Array<UriCreator.QueryItem>();
+            this.query = new Array<UriBuilder.QueryItem>();
         }
-        this.query.push(new UriCreator.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
+        this.query.push(new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
     }
 
     /**
@@ -1052,7 +1047,7 @@ class UriCreator {
 
 }
 
-namespace UriCreator {
+namespace UriBuilder {
     /**
      * 定义 URI 的参数数据结构。（***此对象仅供内部代码使用，请勿引用。）
      */
@@ -1094,26 +1089,26 @@ namespace UriCreator {
 //#endregion
 
 String.prototype.getUriParameter = function (name: string): string {
-    let r = UriCreator.Create(this);
+    let r = new UriBuilder(this);
     return r.getUriParameter(name);
 }
 
 String.prototype.setUriParameter = function (name: string, value: string): string {
-    let r = UriCreator.Create(this);
+    let r = new UriBuilder(this);
     r.setUriParameter(name, value);
     return r.toString();
 }
 
 
 String.prototype.removeUriParameter = function (name: string): string {
-    let r = UriCreator.Create(this);
+    let r = new UriBuilder(this);
     r.removeUriParameter(name);
     return r.toString();
 }
 
 
 String.prototype.clearUriParameter = function (retainSharp?: boolean): string {
-    let r = UriCreator.Create(this);
+    let r = new UriBuilder(this);
     r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 }
