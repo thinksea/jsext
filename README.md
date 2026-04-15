@@ -2,6 +2,10 @@
 对 JavaScript 原生功能进行最小扩展
 
 =======
+###### version：1.8.0
+
+version 1.8.0 升级为使用 ES6 标准。
+
 ###### version：1.7.2
 
 version 1.7.2 新增类对象 UriBuilder 用于构建 URI。

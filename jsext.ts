@@ -1,7 +1,7 @@
 ﻿/*
 对 JavaScript 原生功能进行最小扩展。
-version：1.7.2
-last change：2025-05-04
+version：1.8.0
+last change：2026-04-15
 Author：http://www.thinksea.com/
 projects url:https://github.com/thinksea/jsext
 */
@@ -37,7 +37,7 @@ interface Number {
 Number.prototype.format = function (pattern: string): string {
     if (!pattern) return this.toString();
 
-    let num = this;
+    let num = this as number;
     //if (num === undefined) return undefined;
     //if (num == null) return null;
     //if (num == "") return "";
@@ -178,7 +178,7 @@ interface Date {
      *     console.log('d.format("yyyy年 MMM dd dddd", "zh_cn")-->' + d.format("yyyy年 MMM dd dddd", "zh_cn"));    //2015年 一月 30 星期五
      *     console.log('d.format("yyyy MMM dd dddd", "en")-->' + d.format("yyyy MMM dd dddd", "en"));    //2015 Jan 30 Friday
      */
-    format(pattern: string, local?: string): string;
+    format(pattern: string, local?: "en" | "zh_cn"): string;
 
     //定义 Date.prototype.format 方法使用的本地化配置。
     formatLocal: {
@@ -294,7 +294,7 @@ interface Date {
     addYears2(value: GLint): Date;
 }
 
-Date.prototype.format = function (pattern: string, local?: string): string {
+Date.prototype.format = function (pattern: string, local?: "en" | "zh_cn"): string {
     if (!pattern) return this.toString();
 
     let time: any = {};
@@ -317,6 +317,7 @@ Date.prototype.format = function (pattern: string, local?: string): string {
     time.AmPm = time.Hour < 13 ? 0 : 1;
 
     if (typeof (pattern) !== "undefined" && pattern.replace(/\s/g, "").length > 0) {
+        //定义局部变量的类型，限制对象索引键的取值范围，避免出现编译错误。
         let loc = (local ? this.formatLocal[local] : this.formatLocal["en"]);
         time.regs = {
             "yyyy": time.Year,
@@ -621,7 +622,7 @@ interface String {
      * @param name 参数名。
      * @returns 指定参数的值，如果找不到这个参数则返回 null。
      */
-    getUriParameter(name: string): string;
+    getUriParameter(name: string): string | null;
     /**
      * 为指定的 URI 设置参数。
      * @param name 参数名。
@@ -667,7 +668,7 @@ interface String {
      *     alert("http://www.thinksea.com".getUriPath());//输出 http://www.thinksea.com/
      *     alert("http://www.thinksea.com/a.aspx/?id=1&name=2".getUriPath());//输出 http://www.thinksea.com/a.aspx/
      */
-    getUriPath(): string;
+    getUriPath(): string | null;
     /**
      * 返回当前路径与指定路径的组合。
      * @param uri2 第2个 uri 字符串。
@@ -856,15 +857,15 @@ class UriBuilder {
     /**
      * URI 基本路径信息。
      */
-    private path: string = null;
+    private path: string | null = null;
     /**
      * URI 的参数。
      */
-    private query: Array<UriBuilder.QueryItem> = null;
+    private query: Array<UriBuilder.QueryItem> | null = null;
     /**
      * URI 的页面内部定位标记
      */
-    private mark: string = null;
+    private mark: string | null = null;
 
     /**
      * 用指定的 URI 创建此实例。
@@ -975,7 +976,7 @@ class UriBuilder {
      * @param name 参数名。
      * @returns 指定参数的值，如果找不到这个参数则返回 null。
      */
-    public getUriParameter(name: string): string {
+    public getUriParameter(name: string): string | null {
         if (this.query != null) {
             let name_lowerCase = name.toLowerCase();
             for (let i: GLint = 0; i < this.query.length; i++) {
@@ -1058,14 +1059,14 @@ namespace UriBuilder {
         /**
          * 参数值。
          */
-        public value: string = null;
+        public value: string | null = null;
 
         /**
          * 用指定的数据初始化此实例。
          * @param key 参数名
          * @param value 参数值
          */
-        public constructor(key: string, value: string) {
+        public constructor(key: string, value: string | null) {
             this.key = key;
             this.value = value;
         }
@@ -1078,7 +1079,7 @@ namespace UriBuilder {
                 return this.key;
             }
             else {
-                return this.key + "=" + this.value;
+                return this.key + "=" + (this.value ?? '');
             }
         }
     }
@@ -1087,27 +1088,27 @@ namespace UriBuilder {
 
 //#endregion
 
-String.prototype.getUriParameter = function (name: string): string {
-    let r = new UriBuilder(this);
+String.prototype.getUriParameter = function (name: string): string | null {
+    let r = new UriBuilder(this as string);
     return r.getUriParameter(name);
 }
 
 String.prototype.setUriParameter = function (name: string, value: string): string {
-    let r = new UriBuilder(this);
+    let r = new UriBuilder(this as string);
     r.setUriParameter(name, value);
     return r.toString();
 }
 
 
 String.prototype.removeUriParameter = function (name: string): string {
-    let r = new UriBuilder(this);
+    let r = new UriBuilder(this as string);
     r.removeUriParameter(name);
     return r.toString();
 }
 
 
 String.prototype.clearUriParameter = function (retainSharp?: boolean): string {
-    let r = new UriBuilder(this);
+    let r = new UriBuilder(this as string);
     r.clearUriParameter(typeof (retainSharp) === "undefined" ? false : retainSharp);
     return r.toString();
 }
@@ -1129,8 +1130,8 @@ String.prototype.getUriProtocolAndDomain = function (): string {
     return "";
 }
 
-String.prototype.getUriPath = function (): string {
-    let uri = this;
+String.prototype.getUriPath = function (): string | null {
+    let uri = this as string;
     if (typeof (uri) === "undefined" || uri == null || uri == "") {
         return null;
     }
@@ -1150,7 +1151,7 @@ String.prototype.getUriPath = function (): string {
 
 
 String.prototype.combineUri = function (uri2: string): string {
-    let uri1 = this;
+    let uri1 = this as string;
     if (uri1 == "") return uri2;
     if (uri2 == "") return uri1;
     if (uri2.indexOf("://") >= 0) {
@@ -1170,7 +1171,7 @@ String.prototype.combineUri = function (uri2: string): string {
 }
 
 String.prototype.getFullUri = function (): string {
-    let uri = this;
+    let uri = this as string;
     let domain = uri.getUriProtocolAndDomain();
     let reg = /^\//gi;
     if (domain == "" && !reg.test(uri)) {
@@ -1192,7 +1193,7 @@ String.prototype.getFullUri = function (): string {
 }
 
 String.prototype.toColorHex = function (): string {
-    let that = this;
+    let that = this as string;
     let regHexColor = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式  
     if (/^(rgb|RGB)/.test(that) || that.split(",").length == 3) {
         let aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
@@ -1222,6 +1223,7 @@ String.prototype.toColorHex = function (): string {
             }
             return numHex;
         }
+        return that;
     } else {
         return that;
     }
@@ -1240,7 +1242,7 @@ String.prototype.toColorRGB = function (): string {
             sColor = sColorNew;
         }
         //处理六位的颜色值  
-        let sColorChange = [];
+        let sColorChange: GLint[] = [];
         for (let i = 1; i < 7; i += 2) {
             sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
         }
@@ -1273,7 +1275,8 @@ function xmlEncode(str: string): string {
  * @returns 编码后的 HTML 文本。
  */
 function htmlEncode(str: string): string {
-    if (str == null) return null;
+    //if (str == null) return null;
+    if (str == null) return '';
     return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
 }
 
@@ -1291,7 +1294,8 @@ function htmlEncode(str: string): string {
  * @returns 解码后的 HTML 文本。
  */
 function htmlDecode(str: string): string {
-    if (str == null) return null;
+    //if (str == null) return null;
+    if (str == null) return '';
     return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }
 
@@ -1319,7 +1323,7 @@ function isMobile(): boolean {
     return isMobile._isMobile;
 }
 namespace isMobile {
-    export let _isMobile: boolean = null; //用于缓冲结果，避免冗余计算过程。
+    export let _isMobile: boolean | null = null; //用于缓冲结果，避免冗余计算过程。
 }
 
 /**
@@ -1342,7 +1346,7 @@ function isMobileOrPad(): boolean {
 }
 
 namespace isMobileOrPad {
-    export let _isMobileOrPad: boolean = null; //用于缓冲结果，避免冗余计算过程。
+    export let _isMobileOrPad: boolean | null = null; //用于缓冲结果，避免冗余计算过程。
 }
 
 //#endregion
