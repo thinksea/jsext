@@ -314,7 +314,7 @@ String.prototype.endsWith = function (searchString, position) {
     return false;
 };
 String.prototype.trim = function (trimChars) {
-    if (typeof (trimChars) === "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (typeof (trimChars) === "undefined" || trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '').replace(/\s*$/, '');
     }
     else {
@@ -345,7 +345,7 @@ String.prototype.trim = function (trimChars) {
     }
 };
 String.prototype.trimStart = function (trimChars) {
-    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '');
     }
     else {
@@ -374,7 +374,7 @@ String.prototype.trimStart = function (trimChars) {
     }
 };
 String.prototype.trimEnd = function (trimChars) {
-    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/\s*$/, '');
     }
     else {
@@ -552,7 +552,7 @@ class UriBuilder {
             for (let i = 0; i < this.query.length; i++) {
                 let item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    if (item.value == null) {
+                    if (item.value === null) {
                         return null;
                     }
                     else {
@@ -575,15 +575,15 @@ class UriBuilder {
             for (let i = 0; i < this.query.length; i++) {
                 let item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    this.query[i] = new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
+                    this.query[i] = new UriBuilder.QueryItem(name, (value === null ? null : encodeURIComponent(value)));
                     return;
                 }
             }
         }
-        if (this.query == null) {
+        if (this.query === null) {
             this.query = new Array();
         }
-        this.query.push(new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
+        this.query.push(new UriBuilder.QueryItem(name, (value === null ? null : encodeURIComponent(value))));
     }
     /**
      * 从指定的 URI 删除参数。
@@ -635,7 +635,7 @@ class UriBuilder {
          */
         toString() {
             var _a;
-            if (this.value == null) {
+            if (this.value === null) {
                 return this.key;
             }
             else {
@@ -683,7 +683,7 @@ String.prototype.getUriProtocolAndDomain = function () {
 };
 String.prototype.getUriPath = function () {
     let uri = this;
-    if (typeof (uri) === "undefined" || uri == null || uri == "") {
+    if (typeof (uri) === "undefined" || uri === null || uri == "") {
         return null;
     }
     let path = uri.clearUriParameter();
@@ -817,12 +817,12 @@ function xmlEncode(str) {
 }
 /**
  * 将字符串转换为 HTML 编码的字符串。
- * @param str 要编码的字符串。
+ * @param str 要编码的字符串。当取值为 null 时，返回空字符串 ""。
  * @returns 编码后的 HTML 文本。
  */
 function htmlEncode(str) {
     //if (str == null) return null;
-    if (str == null)
+    if (str === null)
         return '';
     return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
 }
@@ -835,12 +835,12 @@ function htmlEncode(str) {
 //}
 /**
  * 将已经进行过 HTML 编码的字符串转换为已解码的字符串。
- * @param str 要解码的字符串。
+ * @param str 要解码的字符串。当取值为 null 时，返回空字符串 ""。
  * @returns 解码后的 HTML 文本。
  */
 function htmlDecode(str) {
     //if (str == null) return null;
-    if (str == null)
+    if (str === null)
         return '';
     return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }

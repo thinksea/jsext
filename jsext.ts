@@ -730,7 +730,7 @@ String.prototype.endsWith = function (searchString: string, position?: GLuint): 
 }
 
 String.prototype.trim = function (trimChars?: string | string[] | null): string {
-    if (typeof (trimChars) === "undefined" || trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (typeof (trimChars) === "undefined" || trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '').replace(/\s*$/, '');
     }
     else {
@@ -762,7 +762,7 @@ String.prototype.trim = function (trimChars?: string | string[] | null): string 
 }
 
 String.prototype.trimStart = function (trimChars?: string | string[] | null): string {
-    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/^\s*/, '');
     }
     else {
@@ -792,7 +792,7 @@ String.prototype.trimStart = function (trimChars?: string | string[] | null): st
 }
 
 String.prototype.trimEnd = function (trimChars?: string | string[] | null): string {
-    if (trimChars == null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
+    if (trimChars === null || (trimChars instanceof Array && trimChars.length == 0)) { //如果参数“trimChars"是 null或一个空数组则改为删除空白字符。
         return this.replace(/\s*$/, '');
     }
     else {
@@ -982,7 +982,7 @@ class UriBuilder {
             for (let i: GLint = 0; i < this.query.length; i++) {
                 let item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    if (item.value == null) {
+                    if (item.value === null) {
                         return null;
                     }
                     else {
@@ -1000,21 +1000,21 @@ class UriBuilder {
      * @param name 参数名。
      * @param value 新的参数值。
      */
-    public setUriParameter(name: string, value: string): void {
+    public setUriParameter(name: string, value: string | null): void {
         if (this.query != null) {
             let name_lowerCase = name.toLowerCase();
             for (let i: GLint = 0; i < this.query.length; i++) {
                 let item = this.query[i];
                 if (item.key.toLowerCase() == name_lowerCase) {
-                    this.query[i] = new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value)));
+                    this.query[i] = new UriBuilder.QueryItem(name, (value === null ? null : encodeURIComponent(value)));
                     return;
                 }
             }
         }
-        if (this.query == null) {
+        if (this.query === null) {
             this.query = new Array<UriBuilder.QueryItem>();
         }
-        this.query.push(new UriBuilder.QueryItem(name, (value == null ? null : encodeURIComponent(value))));
+        this.query.push(new UriBuilder.QueryItem(name, (value === null ? null : encodeURIComponent(value))));
     }
 
     /**
@@ -1075,7 +1075,7 @@ namespace UriBuilder {
          * 返回此实例的字符串表示形式。
          */
         public toString(): string {
-            if (this.value == null) {
+            if (this.value === null) {
                 return this.key;
             }
             else {
@@ -1132,7 +1132,7 @@ String.prototype.getUriProtocolAndDomain = function (): string {
 
 String.prototype.getUriPath = function (): string | null {
     let uri = this as string;
-    if (typeof (uri) === "undefined" || uri == null || uri == "") {
+    if (typeof (uri) === "undefined" || uri === null || uri == "") {
         return null;
     }
     let path = uri.clearUriParameter();
@@ -1271,12 +1271,12 @@ function xmlEncode(str: string): string {
 
 /**
  * 将字符串转换为 HTML 编码的字符串。
- * @param str 要编码的字符串。
+ * @param str 要编码的字符串。当取值为 null 时，返回空字符串 ""。
  * @returns 编码后的 HTML 文本。
  */
-function htmlEncode(str: string): string {
+function htmlEncode(str: string | null): string {
     //if (str == null) return null;
-    if (str == null) return '';
+    if (str === null) return '';
     return str.replace(/&/gi, "&amp;").replace(/\"/gi, "&quot;").replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/ /gi, "&nbsp;");
 }
 
@@ -1290,12 +1290,12 @@ function htmlEncode(str: string): string {
 
 /**
  * 将已经进行过 HTML 编码的字符串转换为已解码的字符串。
- * @param str 要解码的字符串。
+ * @param str 要解码的字符串。当取值为 null 时，返回空字符串 ""。
  * @returns 解码后的 HTML 文本。
  */
-function htmlDecode(str: string): string {
+function htmlDecode(str: string | null): string {
     //if (str == null) return null;
-    if (str == null) return '';
+    if (str === null) return '';
     return str.replace(/&quot;/gi, "\"").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
 }
 
