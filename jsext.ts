@@ -630,7 +630,7 @@ interface String {
      * @returns 已经设置了指定参数名和参数值的 uri 字符串。
      * @description 如果参数存在则更改它的值，否则添加这个参数。
      */
-    setUriParameter(name: string, value: string): string;
+    setUriParameter(name: string, value: string | null): string;
     /**
      * 从指定的 URI 删除参数。
      * @param name 参数名。
@@ -1093,7 +1093,7 @@ String.prototype.getUriParameter = function (name: string): string | null {
     return r.getUriParameter(name);
 }
 
-String.prototype.setUriParameter = function (name: string, value: string): string {
+String.prototype.setUriParameter = function (name: string, value: string | null): string {
     let r = new UriBuilder(this as string);
     r.setUriParameter(name, value);
     return r.toString();
